@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<!-- React Search Form -->
+<div id="search-form-react-root" 
+     data-blocks="{{ blocks }}"
+     data-position="{{ position }}"
+     data-from="{{ from }}"
+     data-to="{{ to }}"
+     data-event="{{ event }}"
+     data-not-event="{{ not_event }}"
+     data-method="{{ method }}"
+     data-erc20-transfer="{{ erc20_transfer }}"
+     data-tx-cost="{{ tx_cost }}"
+     data-gas-price="{{ gas_price }}"
+     data-chain-id="{{ chain_id }}">
+</div>
+
+
+<!-- React container for JSON data -->
+<div id="mevlog-react-root" class="react-output"></div>
+
+<!-- Fallback for text output -->
+<pre class="output js-cmd-output">{{ output|safe }}</pre>
+
+{% endblock %}

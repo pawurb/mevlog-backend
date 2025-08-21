@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<br>
+
+<form class='inspect-form' method="GET" action="/inspect">
+  <input class='long' type="text" id="tx_hash" name="tx_hash" value="{{ tx_hash }}" placeholder="Tx hash">
+  <br>
+
+  <label for="before"><b>Txs before</b></label>
+  <input class='short' type="number" id="before" name="before" value="{{ before }}" placeholder="Txs before" min="0" max="5">
+
+  <label for="after"><b>Txs after</b></label>
+  <input class='short' type="number" id="after" name="after" value="{{ after }}" placeholder="Subsequent txs" min="0" max="5">
+
+  <br>
+  <input class='long' type="text" id="rpc_url" name="rpc_url" value="{{ rpc_url }}" placeholder="RPC URL">
+
+  <br>
+  <button class='btn btn-default btn-ghost' type="submit">Inspect</button>
+</form>
+
+<br>
+
+{% if success %}
+<b><a target='_blank' href="{{explorer_url}}/tx/{{tx_hash}}">[Explorer]</a></b>
+{% endif %}
+
+<div class="command-box">
+  <a href="https://github.com/pawurb/mevlog-rs" _target='blank'>CLI</a>: <span class="yellow">{{ command }}</span>
+</div>
+
+<pre class="output js-cmd-output">{{ output|safe }}</pre>
+
+{% endblock %}

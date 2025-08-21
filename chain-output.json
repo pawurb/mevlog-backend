@@ -1,0 +1,97 @@
+{
+  "chain_id": 1,
+  "name": "Ethereum Mainnet",
+  "currency": "ETH",
+  "explorer_url": "https://etherscan.io",
+  "rpc_timeout_ms": 500,
+  "rpc_urls": [
+    {
+      "url": "https://0xrpc.io/eth",
+      "response_time_ms": 286
+    },
+    {
+      "url": "https://gateway.tenderly.co/public/mainnet",
+      "response_time_ms": 398
+    },
+    {
+      "url": "https://mainnet.gateway.tenderly.co",
+      "response_time_ms": 403
+    },
+    {
+      "url": "https://eth-mainnet.public.blastapi.io",
+      "response_time_ms": 404
+    },
+    {
+      "url": "https://go.getblock.io/aefd01aa907c4805ba3c00a9e5b48c6b",
+      "response_time_ms": 405
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "response_time_ms": 405
+    },
+    {
+      "url": "https://1rpc.io/eth",
+      "response_time_ms": 408
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "response_time_ms": 419
+    },
+    {
+      "url": "https://ethereum-mainnet.gateway.tatum.io",
+      "response_time_ms": 436
+    },
+    {
+      "url": "https://eth-pokt.nodies.app",
+      "response_time_ms": 437
+    },
+    {
+      "url": "https://rpc.payload.de",
+      "response_time_ms": 437
+    },
+    {
+      "url": "https://ethereum.therpc.io",
+      "response_time_ms": 443
+    },
+    {
+      "url": "https://eth-mainnet.rpcfast.com?api_key=xbhWBI1Wkguk8SNMu1bvvLurPGLXmgwYeC4S6g2H7WdwFigZSmPWVZRxrskEQwIf",
+      "response_time_ms": 446
+    },
+    {
+      "url": "https://eth.meowrpc.com",
+      "response_time_ms": 446
+    },
+    {
+      "url": "https://rpc.mevblocker.io/fullprivacy",
+      "response_time_ms": 467
+    },
+    {
+      "url": "https://virtual.mainnet.rpc.tenderly.co/5804dcf7-70e6-4988-b2b0-3672193e0c91",
+      "response_time_ms": 470
+    },
+    {
+      "url": "https://eth1.lava.build",
+      "response_time_ms": 473
+    },
+    {
+      "url": "https://rpc.eth.gateway.fm",
+      "response_time_ms": 482
+    },
+    {
+      "url": "https://singapore.rpc.blxrbdn.com",
+      "response_time_ms": 483
+    },
+    {
+      "url": "https://uk.rpc.blxrbdn.com",
+      "response_time_ms": 484
+    },
+    {
+      "url": "https://eth.rpc.blxrbdn.com",
+      "response_time_ms": 487
+    },
+    {
+      "url": "https://virginia.rpc.blxrbdn.com",
+      "response_time_ms": 488
+    }
+  ]
+}

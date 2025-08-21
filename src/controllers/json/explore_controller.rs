@@ -1,0 +1,54 @@
+use axum::{extract::Query, http::StatusCode, response::IntoResponse, Json};
+use serde::Deserialize;
+use tokio::process::Command as AsyncCommand;
+
+use crate::{
+    controllers::json::base_controller::{call_json_command, extract_json_query_params},
+    misc::rpc_utils::get_random_rpc_url,
+};
+
+#[derive(Debug, Deserialize)]
+pub struct ExploreParams {
+    pub chain_id: Option<u64>,
+    #[serde(default)]
+    pub block_number: Option<String>,
+}
+
+pub async fn explore(
+    query: Result<Query<ExploreParams>, axum::extract::rejection::QueryRejection>,
+) -> impl IntoResponse {
+    let params = match extract_json_query_params(query) {
+        Ok(params) => params,
+        Err(error_response) => return error_response.into_response(),
+    };
+
+    let mut cmd = AsyncCommand::new("mevlog");
+    cmd.arg("search")
+        .arg("-b")
+        .arg(
+            params
+                .block_number
+                .map_or("latest".to_string(), |bn| bn.to_string()),
+        )
+        .arg("--format")
+        .arg("json")
+        .arg("--rpc-timeout-ms")
+        .arg("500");
+    cmd.env("RUST_LOG", "off");
+
+    let chain_id = params.chain_id.unwrap_or(1);
+
+    match get_random_rpc_url(chain_id).await {
+        Ok(Some(rpc_url)) => {
+            cmd.arg("--rpc-url").arg(&rpc_url);
+        }
+        _ => {
+            cmd.arg("--chain-id").arg(chain_id.to_string());
+        }
+    }
+
+    match call_json_command::<serde_json::Value>(&mut cmd).await {
+        Ok(explore_data) => (StatusCode::OK, Json(explore_data)).into_response(),
+        Err(error_json) => (StatusCode::BAD_REQUEST, Json(error_json)).into_response(),
+    }
+}

@@ -1,0 +1,81 @@
+use axum::{extract::Query, http::StatusCode, response::IntoResponse, Json};
+use serde::Deserialize;
+use serde_json::Value;
+use std::time::Duration;
+use tokio::process::Command;
+use tokio::time::timeout;
+
+use crate::controllers::base_controller::{decorate_error_message, DATA_FETCH_ERROR};
+
+pub async fn call_json_command<T: serde::de::DeserializeOwned>(
+    cmd: &mut Command,
+) -> Result<T, Value> {
+    let timeout_duration = Duration::from_secs(10);
+
+    match timeout(timeout_duration, cmd.output()).await {
+        Ok(Ok(output)) => {
+            if !output.status.success() {
+                let error_msg = String::from_utf8_lossy(&output.stderr);
+
+                let friendly_error = decorate_error_message(&error_msg);
+
+                if let Ok(_error_json) = serde_json::from_str::<Value>(&error_msg) {
+                    return Err(serde_json::json!({
+                        "error": friendly_error
+                    }));
+                } else {
+                    return Err(serde_json::json!({
+                        "error": friendly_error
+                    }));
+                }
+            }
+
+            let stdout = String::from_utf8_lossy(&output.stdout);
+            match serde_json::from_str::<T>(&stdout) {
+                Ok(value) => Ok(value),
+                Err(e) => Err(serde_json::json!({
+                    "error": format!("Failed to parse JSON: {e}")
+                })),
+            }
+        }
+        Ok(Err(e)) => Err(serde_json::json!({
+            "error": e.to_string()
+        })),
+        Err(_) => Err(serde_json::json!({
+            "error": decorate_error_message(DATA_FETCH_ERROR)
+        })),
+    }
+}
+
+pub fn error_json_response(e: &str) -> String {
+    format!("{{\"error\": \"{e}\"}}")
+}
+
+pub fn extract_json_query_params<T>(
+    query: Result<Query<T>, axum::extract::rejection::QueryRejection>,
+) -> Result<T, impl IntoResponse>
+where
+    T: for<'de> Deserialize<'de>,
+{
+    match extract_query_params(query) {
+        Ok(params) => Ok(params),
+        Err(e) => Err((
+            StatusCode::BAD_REQUEST,
+            Json(serde_json::json!({
+                "error": e.to_string()
+            })),
+        )),
+    }
+}
+
+pub fn extract_query_params<T>(
+    query: Result<Query<T>, axum::extract::rejection::QueryRejection>,
+) -> Result<T, String>
+where
+    T: for<'de> Deserialize<'de>,
+{
+    match query {
+        Ok(Query(params)) => Ok(params),
+        Err(e) => Err(e.to_string()),
+    }
+}

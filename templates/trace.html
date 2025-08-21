@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<br>
+
+<form method="GET" action="/trace">
+  <input class='long' type="text" id="tx_hash" name="tx_hash" value="{{ tx_hash }}" placeholder="Tx hash">
+  <input class='long' type="text" id="rpc_url" name="rpc_url" value="{{ rpc_url }}" placeholder="RPC URL">
+
+  <br>
+  <button class='btn btn-default btn-ghost' type="submit">Trace</button>
+</form>
+
+<br>
+
+{% if success %}
+<b><a target='_blank' href="{{explorer_url}}/tx/{{tx_hash}}?rpc_url={{rpc_url}}">[Explorer]</a></b>
+<b><a class='magenta' href="/inspect?tx_hash={{tx_hash}}&rpc_url={{rpc_url}}">[Inspect]</a></b>
+{% endif %}
+
+<div class="command-box">
+  <a href="https://book.getfoundry.sh/reference/cast/cast-run" _target='blank'>CLI</a>: <span class="yellow">{{ command }}</span>
+</div>
+
+<pre class="output js-cmd-output">{{ output|safe }}</pre>
+
+{% endblock %}
