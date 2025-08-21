@@ -3,7 +3,9 @@ use mevlog::ChainInfoNoRpcsJson;
 use serde::Deserialize;
 use tokio::process::Command as AsyncCommand;
 
-use crate::controllers::json::base_controller::{call_json_command, extract_json_query_params};
+use crate::controllers::json::base_controller::{
+    call_json_command_first_line, extract_json_query_params,
+};
 
 #[derive(Debug, Deserialize)]
 pub struct ChainInfoParams {
@@ -20,7 +22,7 @@ pub async fn fetch_chain_info_no_rpcs(chain_id: u64) -> Result<ChainInfoNoRpcsJs
         .arg("--skip-urls");
     cmd.env("RUST_LOG", "off");
 
-    match call_json_command::<ChainInfoNoRpcsJson>(&mut cmd).await {
+    match call_json_command_first_line::<ChainInfoNoRpcsJson>(&mut cmd).await {
         Ok(chain_info) => Ok(chain_info),
         Err(e) => Err(format!(
             "Failed to get chain info for chain_id {chain_id}: {e}",

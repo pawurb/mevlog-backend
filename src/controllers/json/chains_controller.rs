@@ -3,7 +3,9 @@ use mevlog::ChainEntryJson;
 use serde::Deserialize;
 use tokio::process::Command as AsyncCommand;
 
-use crate::controllers::json::base_controller::{call_json_command, extract_json_query_params};
+use crate::controllers::json::base_controller::{
+    call_json_command_first_line, extract_json_query_params,
+};
 
 #[derive(Debug, Deserialize)]
 pub struct ChainsParams {
@@ -42,7 +44,7 @@ pub async fn chains(
         }
     }
 
-    match call_json_command::<Vec<ChainEntryJson>>(&mut cmd).await {
+    match call_json_command_first_line::<Vec<ChainEntryJson>>(&mut cmd).await {
         Ok(chains) => (StatusCode::OK, Json(chains)).into_response(),
         Err(error_json) => (StatusCode::BAD_REQUEST, Json(error_json)).into_response(),
     }

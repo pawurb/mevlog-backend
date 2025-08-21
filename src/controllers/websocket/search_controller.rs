@@ -40,7 +40,6 @@ async fn handle_socket(socket: WebSocket, params: SearchParams) {
         }
     }
 
-
     let blocks = get_default_blocks(params.blocks.clone());
 
     cmd.arg("-b").arg(blocks);
@@ -77,11 +76,9 @@ async fn handle_socket(socket: WebSocket, params: SearchParams) {
         cmd.arg("--tx-cost").arg(tx_cost);
     }
 
-
     if let Some(gas_price) = params.gas_price.clone() {
         cmd.arg("--gas-price").arg(gas_price);
     }
-
 
     cmd.env("RUST_LOG", "off");
 

@@ -3,7 +3,7 @@ use serde::Deserialize;
 use tokio::process::Command as AsyncCommand;
 
 use crate::{
-    controllers::json::base_controller::{call_json_command, extract_json_query_params},
+    controllers::json::base_controller::{call_json_command_first_line, extract_json_query_params},
     misc::rpc_utils::get_random_rpc_url,
 };
 
@@ -47,7 +47,7 @@ pub async fn explore(
         }
     }
 
-    match call_json_command::<serde_json::Value>(&mut cmd).await {
+    match call_json_command_first_line::<serde_json::Value>(&mut cmd).await {
         Ok(explore_data) => (StatusCode::OK, Json(explore_data)).into_response(),
         Err(error_json) => (StatusCode::BAD_REQUEST, Json(error_json)).into_response(),
     }

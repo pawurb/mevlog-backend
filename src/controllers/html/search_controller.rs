@@ -1,4 +1,3 @@
-
 use crate::config::{host, routes::html_response};
 use crate::controllers::base_controller::empty_string_as_none;
 use crate::controllers::json::base_controller::extract_query_params;

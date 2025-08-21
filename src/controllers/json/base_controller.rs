@@ -1,7 +1,9 @@
 use axum::{extract::Query, http::StatusCode, response::IntoResponse, Json};
 use serde::Deserialize;
 use serde_json::Value;
+use std::process::Stdio;
 use std::time::Duration;
+use tokio::io::{AsyncBufReadExt, BufReader};
 use tokio::process::Command;
 use tokio::time::timeout;
 
@@ -41,6 +43,55 @@ pub async fn call_json_command<T: serde::de::DeserializeOwned>(
         Ok(Err(e)) => Err(serde_json::json!({
             "error": e.to_string()
         })),
+        Err(_) => Err(serde_json::json!({
+            "error": decorate_error_message(DATA_FETCH_ERROR)
+        })),
+    }
+}
+
+pub async fn call_json_command_first_line<T: serde::de::DeserializeOwned>(
+    cmd: &mut Command,
+) -> Result<T, Value> {
+    let timeout_duration = Duration::from_secs(10);
+
+    cmd.stdout(Stdio::piped()).stderr(Stdio::piped());
+
+    let timeout_result = timeout(timeout_duration, async {
+        let mut child = cmd.spawn().map_err(|e| {
+            serde_json::json!({
+                "error": format!("Failed to spawn command: {e}")
+            })
+        })?;
+
+        let stdout = child.stdout.take().ok_or_else(|| {
+            serde_json::json!({
+                "error": "Failed to capture stdout"
+            })
+        })?;
+
+        let mut reader = BufReader::new(stdout).lines();
+
+        if let Some(line) = reader.next_line().await.map_err(|e| {
+            serde_json::json!({
+                "error": format!("Failed to read line: {e}")
+            })
+        })? {
+            match serde_json::from_str::<T>(&line) {
+                Ok(value) => Ok(value),
+                Err(_) => Err(serde_json::json!({
+                    "error": "No valid JSON found in output"
+                })),
+            }
+        } else {
+            Err(serde_json::json!({
+                "error": "No output received from command"
+            }))
+        }
+    })
+    .await;
+
+    match timeout_result {
+        Ok(result) => result,
         Err(_) => Err(serde_json::json!({
             "error": decorate_error_message(DATA_FETCH_ERROR)
         })),
