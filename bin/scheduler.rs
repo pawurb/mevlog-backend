@@ -49,7 +49,14 @@ async fn populate_mainnet_cache() -> Result<()> {
 
     let mut current_block_number = provider.get_block_number().await?;
     loop {
-        let new_block_number = provider.get_block_number().await?;
+        let new_block_number = match provider.get_block_number().await {
+            Ok(block_number) => block_number,
+            Err(e) => {
+                error!("Failed to get block number: {}", &e);
+                continue;
+            }
+        };
+
         if new_block_number == current_block_number {
             tokio::time::sleep(tokio::time::Duration::from_secs(4)).await;
             info!("No new blocks, sleeping: {}", current_block_number);
