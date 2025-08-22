@@ -1,10 +1,7 @@
+use futures::FutureExt;
 use tokio::process::Command;
 
-use alloy::rpc::types::BlockTransactions;
-use alloy::{
-    eips::BlockNumberOrTag,
-    providers::{Provider, ProviderBuilder},
-};
+use alloy::providers::{Provider, ProviderBuilder};
 use eyre::Result;
 use mevlog_backend::config::{middleware, schedule::get_schedule};
 use mevlog_backend::misc::utils::{measure_end, measure_start, uptime_ping};
@@ -23,17 +20,17 @@ async fn main() -> Result<()> {
 
 async fn run() -> Result<()> {
     middleware::init_logs("scheduler.log");
-    // tokio::spawn(async move {
-    //     let result = std::panic::AssertUnwindSafe(populate_revm_cache())
-    //         .catch_unwind()
-    //         .await;
+    tokio::spawn(async move {
+        let result = std::panic::AssertUnwindSafe(populate_mainnet_cache())
+            .catch_unwind()
+            .await;
 
-    //     match result {
-    //         Ok(Ok(_)) => panic!("Cache task finished cleanly (which it never should)"),
-    //         Ok(Err(e)) => error!("Cache task errored: {:?}", e),
-    //         Err(e) => error!("Cache task panicked: {:?}", e),
-    //     }
-    // });
+        match result {
+            Ok(Ok(_)) => panic!("Cache task finished cleanly (which it never should)"),
+            Ok(Err(e)) => error!("Cache task errored: {:?}", e),
+            Err(e) => error!("Cache task panicked: {:?}", e),
+        }
+    });
 
     let sched = get_schedule().await?;
     sched.start().await?;
@@ -45,8 +42,8 @@ async fn run() -> Result<()> {
     Ok(())
 }
 
-async fn _populate_revm_cache() -> Result<()> {
-    let rpc_url = std::env::var("ETH_RPC_URL_VAL").expect("Missing ETH_RPC_URL_VAL env var");
+async fn populate_mainnet_cache() -> Result<()> {
+    let rpc_url = std::env::var("REMOTE_ETH_RPC_URL").expect("Missing REMOTE_ETH_RPC_URL env var");
     let provider = ProviderBuilder::new().connect_http(rpc_url.parse()?);
     tracing::info!("Scheduler connected to HTTP provider");
 
@@ -60,52 +57,36 @@ async fn _populate_revm_cache() -> Result<()> {
         }
 
         current_block_number = new_block_number;
-        let block_tag = BlockNumberOrTag::Number(new_block_number);
-        let block = provider.get_block_by_number(block_tag).await?;
 
-        let block = match block {
-            Some(block) => block,
-            None => continue,
-        };
-
-        let txs = match block.transactions {
-            BlockTransactions::Hashes(hashes) => hashes,
-            _ => continue,
-        };
-
-        if txs.is_empty() {
-            continue;
-        }
-
-        let last_tx = txs[txs.len() - 1];
-        let start = measure_start("cast run last");
-        let _resp = match Command::new("cast")
-            .arg("run")
-            .arg(last_tx.to_string())
+        let start = measure_start("mevlog latest");
+        let _resp = match Command::new("mevlog")
+            .arg("search")
+            .arg("-b")
+            .arg("latest")
             .arg("--rpc-url")
-            .arg(std::env::var("ETH_RPC_URL_VAL").unwrap())
+            .arg(rpc_url.clone())
             .output()
             .await
         {
             Ok(resp) => resp,
             Err(e) => {
-                error!("Failed to run cast: {}", &e);
+                error!("Failed to run mevlog search latest: {}", &e);
                 continue;
             }
         };
 
-        if new_block_number % 10 == 0 {
-            let uptime_url = std::env::var("UPTIME_URL_REVM_CACHE")
-                .expect("Missing UPTIME_URL_REVM_CACHE env var");
-            info!("Revm cache uptime ping");
+        // if new_block_number % 10 == 0 {
+        //     let uptime_url = std::env::var("UPTIME_URL_REVM_CACHE")
+        //         .expect("Missing UPTIME_URL_REVM_CACHE env var");
+        //     info!("Revm cache uptime ping");
 
-            match uptime_ping(&uptime_url).await {
-                Ok(_) => {}
-                Err(e) => {
-                    error!("Failed to uptime ping: {}", &e);
-                }
-            }
-        }
+        //     match uptime_ping(&uptime_url).await {
+        //         Ok(_) => {}
+        //         Err(e) => {
+        //             error!("Failed to uptime ping: {}", &e);
+        //         }
+        //     }
+        // }
 
         measure_end(start);
     }
