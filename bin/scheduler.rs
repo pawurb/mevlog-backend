@@ -75,18 +75,18 @@ async fn populate_mainnet_cache() -> Result<()> {
             }
         };
 
-        // if new_block_number % 10 == 0 {
-        //     let uptime_url = std::env::var("UPTIME_URL_REVM_CACHE")
-        //         .expect("Missing UPTIME_URL_REVM_CACHE env var");
-        //     info!("Revm cache uptime ping");
+        if new_block_number % 10 == 0 {
+            let uptime_url = std::env::var("UPTIME_URL_MAINNET_CACHE")
+                .expect("Missing UPTIME_URL_MAINNET_CACHE env var");
+            info!("Mainnet cache uptime ping");
 
-        //     match uptime_ping(&uptime_url).await {
-        //         Ok(_) => {}
-        //         Err(e) => {
-        //             error!("Failed to uptime ping: {}", &e);
-        //         }
-        //     }
-        // }
+            match uptime_ping(&uptime_url).await {
+                Ok(_) => {}
+                Err(e) => {
+                    error!("Failed to uptime ping: {}", &e);
+                }
+            }
+        }
 
         measure_end(start);
     }
