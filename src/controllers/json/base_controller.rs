@@ -21,15 +21,9 @@ pub async fn call_json_command<T: serde::de::DeserializeOwned>(
 
                 let friendly_error = decorate_error_message(&error_msg);
 
-                if let Ok(_error_json) = serde_json::from_str::<Value>(&error_msg) {
-                    return Err(serde_json::json!({
-                        "error": friendly_error
-                    }));
-                } else {
-                    return Err(serde_json::json!({
-                        "error": friendly_error
-                    }));
-                }
+                return Err(serde_json::json!({
+                    "error": friendly_error
+                }));
             }
 
             let stdout = String::from_utf8_lossy(&output.stdout);
