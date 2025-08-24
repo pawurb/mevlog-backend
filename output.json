@@ -6,78 +6,24 @@
     "tx_hash": "0x06fed3f7dc71194fe3c2fd379ef1e8aaa850354454ea9dd526364a4e24853660",
     "index": 0,
     "from": "0xbaa3ef11659d347aae75c7bb67e29f1f8bb90843",
+    "from_ens": null,
     "to": "0x51c72848c68a965f66fa7a88855f9f7784502a7f",
     "nonce": 33676,
     "value": "0",
     "display_value": "0 ETH",
-    "coinbase_transfer": "5980759127936086160",
-    "display_coinbase_transfer": "5.98076 ETH",
-    "display_coinbase_transfer_usd": "$23,789.57",
+    "coinbase_transfer": null,
+    "display_coinbase_transfer": null,
+    "display_coinbase_transfer_usd": null,
     "success": true,
     "gas_price": 532586000,
     "gas_used": 327663,
     "tx_cost": 174508726518000,
     "display_tx_cost": "0.00017 ETH",
-    "display_tx_cost_usd": "$0.69",
-    "full_tx_cost": 5980933636662604160,
-    "display_full_tx_cost": "5.98093 ETH",
-    "display_full_tx_cost_usd": "$23,790.27",
-    "calls": [
-      {
-        "from": "0xbaa3ef11659d347aae75c7bb67e29f1f8bb90843",
-        "to": "0x51c72848c68a965f66fa7a88855f9f7784502a7f",
-        "signature": "<Unknown>",
-        "signature_hash": "0x771d503f"
-      },
-      {
-        "from": "0x51c72848c68a965f66fa7a88855f9f7784502a7f",
-        "to": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
-        "signature": "swap(address,bool,int256,uint160,bytes)",
-        "signature_hash": "0x128acb08"
-      },
-      {
-        "from": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
-        "to": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-        "signature": "transfer(address,uint256)",
-        "signature_hash": "0xa9059cbb"
-      },
-      {
-        "from": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-        "to": "0x43506849d7c04f9138d1a2050bbf3a0c054402dd",
-        "signature": "transfer(address,uint256)",
-        "signature_hash": "0xa9059cbb"
-      },
-      {
-        "from": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
-        "to": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-        "signature": "balanceOf(address)",
-        "signature_hash": "0x70a08231"
-      },
-      {
-        "from": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
-        "to": "0x51c72848c68a965f66fa7a88855f9f7784502a7f",
-        "signature": "uniswapV3SwapCallback(int256,int256,bytes)",
-        "signature_hash": "0xfa461e33"
-      },
-      {
-        "from": "0x51c72848c68a965f66fa7a88855f9f7784502a7f",
-        "to": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-        "signature": "transfer(address,uint256)",
-        "signature_hash": "0xa9059cbb"
-      },
-      {
-        "from": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
-        "to": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-        "signature": "balanceOf(address)",
-        "signature_hash": "0x70a08231"
-      },
-      {
-        "from": "0x51c72848c68a965f66fa7a88855f9f7784502a7f",
-        "to": "0x1f9090aae28b8a3dceadf281b0f12828e676c326",
-        "signature": "<ETH transfer>",
-        "signature_hash": null
-      }
-    ],
+    "display_tx_cost_usd": "$0.83",
+    "full_tx_cost": null,
+    "display_full_tx_cost": null,
+    "display_full_tx_cost_usd": null,
+    "calls": null,
     "log_groups": [
       {
         "source": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
@@ -135,125 +81,87 @@
   {
     "block_number": 22045570,
     "signature": "<Unknown>",
-    "signature_hash": "0x771d503f",
-    "tx_hash": "0xc41ec7b103143d668df5a6821595483100d77facd8b1029b7853412db27a0f73",
-    "index": 1,
-    "from": "0xe92ea8f400cb9bd368bd1185c9fc5e2664770341",
+    "signature_hash": "0x30a28ffc",
+    "tx_hash": "0x07d812a5fd3e9725b8c535ab5e98c65700d22353c97a47b7947af2712fe3e24d",
+    "index": 15,
+    "from": "0x5fa60dd1d2809604496d3315ab6f878bd59f64d4",
+    "from_ens": null,
     "to": "0x51c72848c68a965f66fa7a88855f9f7784502a7f",
-    "nonce": 25440,
+    "nonce": 34762,
     "value": "0",
     "display_value": "0 ETH",
-    "coinbase_transfer": "2427757271560881952",
-    "display_coinbase_transfer": "2.42776 ETH",
-    "display_coinbase_transfer_usd": "$9,656.85",
+    "coinbase_transfer": null,
+    "display_coinbase_transfer": null,
+    "display_coinbase_transfer_usd": null,
     "success": true,
     "gas_price": 532586000,
-    "gas_used": 163305,
-    "tx_cost": 86973956730000,
-    "display_tx_cost": "0.00009 ETH",
-    "display_tx_cost_usd": "$0.35",
-    "full_tx_cost": 2427844245517611952,
-    "display_full_tx_cost": "2.42784 ETH",
-    "display_full_tx_cost_usd": "$9,657.20",
-    "calls": [
-      {
-        "from": "0xe92ea8f400cb9bd368bd1185c9fc5e2664770341",
-        "to": "0x51c72848c68a965f66fa7a88855f9f7784502a7f",
-        "signature": "<Unknown>",
-        "signature_hash": "0x771d503f"
-      },
-      {
-        "from": "0x51c72848c68a965f66fa7a88855f9f7784502a7f",
-        "to": "0x9db9e0e53058c89e5b94e29621a205198648425b",
-        "signature": "swap(address,bool,int256,uint160,bytes)",
-        "signature_hash": "0x128acb08"
-      },
-      {
-        "from": "0x9db9e0e53058c89e5b94e29621a205198648425b",
-        "to": "0xdac17f958d2ee523a2206206994597c13d831ec7",
-        "signature": "transfer(address,uint256)",
-        "signature_hash": "0xa9059cbb"
-      },
-      {
-        "from": "0x9db9e0e53058c89e5b94e29621a205198648425b",
-        "to": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
-        "signature": "balanceOf(address)",
-        "signature_hash": "0x70a08231"
-      },
-      {
-        "from": "0x9db9e0e53058c89e5b94e29621a205198648425b",
-        "to": "0x51c72848c68a965f66fa7a88855f9f7784502a7f",
-        "signature": "uniswapV3SwapCallback(int256,int256,bytes)",
-        "signature_hash": "0xfa461e33"
-      },
-      {
-        "from": "0x51c72848c68a965f66fa7a88855f9f7784502a7f",
-        "to": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
-        "signature": "transfer(address,uint256)",
-        "signature_hash": "0xa9059cbb"
-      },
-      {
-        "from": "0x9db9e0e53058c89e5b94e29621a205198648425b",
-        "to": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
-        "signature": "balanceOf(address)",
-        "signature_hash": "0x70a08231"
-      },
-      {
-        "from": "0x51c72848c68a965f66fa7a88855f9f7784502a7f",
-        "to": "0x1f9090aae28b8a3dceadf281b0f12828e676c326",
-        "signature": "<ETH transfer>",
-        "signature_hash": null
-      }
-    ],
+    "gas_used": 105444,
+    "tx_cost": 56157998184000,
+    "display_tx_cost": "0.00006 ETH",
+    "display_tx_cost_usd": "$0.27",
+    "full_tx_cost": null,
+    "display_full_tx_cost": null,
+    "display_full_tx_cost_usd": null,
+    "calls": null,
     "log_groups": [
       {
-        "source": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+        "source": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
         "logs": [
           {
-            "source": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+            "source": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
             "signature": "Transfer(address,address,uint256)",
-            "symbol": "USDT",
-            "amount": "1709814888749",
-            "topics": [
-              "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
-              "0x0000000000000000000000009db9e0e53058c89e5b94e29621a205198648425b",
-              "0x00000000000000000000000051c72848c68a965f66fa7a88855f9f7784502a7f"
-            ],
-            "data": "0000000000000000000000000000000000000000000000000000018e18e8b92d"
-          }
-        ]
-      },
-      {
-        "source": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
-        "logs": [
-          {
-            "source": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
-            "signature": "Transfer(address,address,uint256)",
-            "symbol": "WBTC",
-            "amount": "2059288272",
+            "symbol": "WETH",
+            "amount": "9756121852294946816",
             "topics": [
               "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
               "0x00000000000000000000000051c72848c68a965f66fa7a88855f9f7784502a7f",
-              "0x0000000000000000000000009db9e0e53058c89e5b94e29621a205198648425b"
+              "0x000000000000000000000000a478c2975ab1ea89e8196811f51a7b7ade33eb11"
             ],
-            "data": "000000000000000000000000000000000000000000000000000000007abe3ed0"
+            "data": "0000000000000000000000000000000000000000000000008764b5226f776000"
           }
         ]
       },
       {
-        "source": "0x9db9e0e53058c89e5b94e29621a205198648425b",
+        "source": "0x6b175474e89094c44da98b954eedeac495271d0f",
         "logs": [
           {
-            "source": "0x9db9e0e53058c89e5b94e29621a205198648425b",
-            "signature": "Swap(address,address,int256,int256,uint160,uint128,int24)",
-            "symbol": "WBTC|USDT",
+            "source": "0x6b175474e89094c44da98b954eedeac495271d0f",
+            "signature": "Transfer(address,address,uint256)",
+            "symbol": "DAI",
+            "amount": "18476155164801751842816",
+            "topics": [
+              "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+              "0x000000000000000000000000a478c2975ab1ea89e8196811f51a7b7ade33eb11",
+              "0x00000000000000000000000051c72848c68a965f66fa7a88855f9f7784502a7f"
+            ],
+            "data": "0000000000000000000000000000000000000000000003e998292f858f400000"
+          }
+        ]
+      },
+      {
+        "source": "0xa478c2975ab1ea89e8196811f51a7b7ade33eb11",
+        "logs": [
+          {
+            "source": "0xa478c2975ab1ea89e8196811f51a7b7ade33eb11",
+            "signature": "Sync(uint112,uint112)",
+            "symbol": null,
             "amount": null,
             "topics": [
-              "0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67",
+              "0x1c411e9a96e071241c2f21f7726b17ae89e3cab4c78be50e062b03a9fffbbad1"
+            ],
+            "data": "0000000000000000000000000000000000000000000404e1e3f2df487e13264d00000000000000000000000000000000000000000000008b316ca466c0b782f9"
+          },
+          {
+            "source": "0xa478c2975ab1ea89e8196811f51a7b7ade33eb11",
+            "signature": "Swap(address,uint256,uint256,uint256,uint256,address)",
+            "symbol": null,
+            "amount": null,
+            "topics": [
+              "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
               "0x00000000000000000000000051c72848c68a965f66fa7a88855f9f7784502a7f",
               "0x00000000000000000000000051c72848c68a965f66fa7a88855f9f7784502a7f"
             ],
-            "data": "000000000000000000000000000000000000000000000000000000007abe3ed0fffffffffffffffffffffffffffffffffffffffffffffffffffffe71e71746d3000000000000000000000000000000000000001cd4338933c4d31ae238dca83000000000000000000000000000000000000000000000000000001a95abd991cc000000000000000000000000000000000000000000000000000000000001069e"
+            "data": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008764b5226f7760000000000000000000000000000000000000000000000003e998292f858f4000000000000000000000000000000000000000000000000000000000000000000000"
           }
         ]
       }
