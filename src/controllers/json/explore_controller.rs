@@ -33,7 +33,9 @@ pub async fn explore(
         .arg("--format")
         .arg("json")
         .arg("--rpc-timeout-ms")
-        .arg("500");
+        .arg("500")
+        .arg("--latest-offset") // Improves caching
+        .arg("1");
     cmd.env("RUST_LOG", "off");
 
     let chain_id = params.chain_id.unwrap_or(1);

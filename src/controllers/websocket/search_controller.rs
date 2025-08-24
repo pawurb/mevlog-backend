@@ -29,7 +29,11 @@ async fn handle_socket(socket: WebSocket, params: SearchParams) {
 
     let mut cmd = Command::new("mevlog");
 
-    cmd.arg("search").arg("--format").arg("json-stream");
+    cmd.arg("search")
+        .arg("--format")
+        .arg("json-stream")
+        .arg("--latest-offset") // Improves caching
+        .arg("1");
 
     match get_random_rpc_url(chain_id).await {
         Ok(Some(rpc_url)) => {
