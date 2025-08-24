@@ -8,7 +8,7 @@ use eyre::Result;
 use reqwest::StatusCode;
 use serde::Deserialize;
 
-use crate::controllers::base_controller::{error_message, get_default_blocks, loading_spinner};
+use crate::controllers::base_controller::{error_message, get_default_blocks};
 
 #[derive(Template)]
 #[template(path = "search.html")]
