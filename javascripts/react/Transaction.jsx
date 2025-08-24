@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const formatExplorerLink = (address, type, explorerUrl) => {
+const formatExplorerLink = (address, type, explorerUrl, ensName = null) => {
   if (!address || address === '<Unknown>') return address;
   return (
     <a
@@ -9,7 +9,7 @@ const formatExplorerLink = (address, type, explorerUrl) => {
       rel="noopener noreferrer"
       style={{ color: '#4a9eff', textDecoration: 'none' }}
     >
-      {address}
+      {ensName || address}
     </a>
   );
 };
@@ -155,7 +155,7 @@ const TransactionDetails = ({ transaction, explorerUrl, showExtraDetails = true 
         <span className="method" style={{ fontWeight: 'bold' }}>{transaction.signature}</span>
       </div>
       <div style={{ marginBottom: '6px' }}>
-        {formatExplorerLink(transaction.from, 'address', explorerUrl)} => {formatExplorerLink(transaction.to, 'address', explorerUrl) || '<Unknown>'}
+        {formatExplorerLink(transaction.from, 'address', explorerUrl, transaction.from_ens)} => {formatExplorerLink(transaction.to, 'address', explorerUrl) || '<Unknown>'}
       </div>
       <div style={{ marginBottom: '6px' }}>
         <span style={labelStyle}>Gas Tx Cost:</span>
