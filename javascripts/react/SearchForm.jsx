@@ -459,7 +459,7 @@ const SearchForm = ({ initialValues = {}, onSubmit }) => {
       }
     },
     {
-      title: 'Position 0 txs that did not emit any, no Swap',
+      title: 'Position 0 txs that did not emit any event matching /(Swap).+/ regexp',
       params: {
         position: '0',
         not_event: '/(Swap).+/',
@@ -515,6 +515,28 @@ const SearchForm = ({ initialValues = {}, onSubmit }) => {
     if (window.clearMevlogViewer) {
       window.clearMevlogViewer();
     }
+
+    // Scroll to filters section after a short delay to ensure DOM updates
+    setTimeout(() => {
+      // Find the filters section by looking for the element containing "Filters" text
+      const filtersHeaders = Array.from(document.querySelectorAll('span')).filter(span =>
+        span.textContent === 'Filters'
+      );
+      if (filtersHeaders.length > 0) {
+        const filtersSection = filtersHeaders[0].closest('div[style*="border"]');
+        if (filtersSection) {
+          // Calculate position with offset for sticky header
+          const rect = filtersSection.getBoundingClientRect();
+          const offset = 80; // Adjust this value based on your header height
+          const targetPosition = window.pageYOffset + rect.top - offset;
+
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      }
+    }, 100);
   };
 
   return (
@@ -535,7 +557,7 @@ const SearchForm = ({ initialValues = {}, onSubmit }) => {
               style={sectionHeaderStyle}
               onClick={toggleSampleQueries}
             >
-              <span style={sectionTitleStyle}>Sample Queries</span>
+              <span style={sectionTitleStyle}>Sample Queries [Mainnet]</span>
               <span style={sampleQueriesExpanded ? expandedIconStyle : expandIconStyle}>
                 ▶
               </span>

@@ -212,7 +212,7 @@ const MevlogViewer = ({ replaceMode = false, showBlockNumbers = true, chainData:
   }
 
   if (transactions.length === 0) {
-    return <div className="no-data">No data available</div>;
+    return <div className="no-data">Query returned no results</div>;
   }
 
   const sortedTransactions = getSortedTransactions();
@@ -262,7 +262,7 @@ const MevlogViewer = ({ replaceMode = false, showBlockNumbers = true, chainData:
           </button>
         </div>
       )}
-      
+
       <TransactionTableHeader
         sortConfig={sortConfig}
         onSort={handleSort}
