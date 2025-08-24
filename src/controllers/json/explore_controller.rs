@@ -40,14 +40,12 @@ pub async fn explore(
 
     let chain_id = params.chain_id.unwrap_or(1);
 
-    match get_random_rpc_url(chain_id).await {
-        Ok(Some(rpc_url)) => {
-            cmd.arg("--rpc-url").arg(&rpc_url);
-        }
-        _ => {
-            cmd.arg("--chain-id").arg(chain_id.to_string());
-        }
+    if let Ok(Some(rpc_url)) = get_random_rpc_url(chain_id).await {
+        cmd.arg("--rpc-url").arg(&rpc_url);
     }
+
+    cmd.arg("--chain-id").arg(chain_id.to_string());
+    cmd.arg("--skip-verify-chain-id");
 
     match call_json_command_first_line::<serde_json::Value>(&mut cmd).await {
         Ok(explore_data) => (StatusCode::OK, Json(explore_data)).into_response(),
