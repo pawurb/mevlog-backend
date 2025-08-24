@@ -2,7 +2,6 @@ use eyre::Result;
 use serde::Deserialize;
 
 pub const DEFAULT_BLOCKS: &str = "latest";
-pub const DEFAULT_POSITION: &str = "0:5";
 
 pub fn deserialize_bool<'de, D>(deserializer: D) -> Result<bool, D::Error>
 where
@@ -45,19 +44,6 @@ pub fn get_default_blocks(blocks: Option<String>) -> String {
             }
         }
         None => DEFAULT_BLOCKS.to_string(),
-    }
-}
-
-pub fn get_default_position(position: Option<String>) -> String {
-    match position {
-        Some(position) => {
-            if position.is_empty() {
-                DEFAULT_POSITION.to_string()
-            } else {
-                position
-            }
-        }
-        None => DEFAULT_POSITION.to_string(),
     }
 }
 

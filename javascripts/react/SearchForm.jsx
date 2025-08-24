@@ -17,8 +17,27 @@ const SearchForm = ({ initialValues = {}, onSubmit }) => {
     chain_id: initialValues.chain_id || ''
   });
 
+  // Initialize results area and hide loading spinner
+  useEffect(() => {
+    const cmdOutput = document.querySelector('.js-cmd-output');
+    if (cmdOutput) {
+      // If the content doesn't already contain our placeholder, set it
+      if (!cmdOutput.innerHTML.includes('Press search to query') && !cmdOutput.innerHTML.trim()) {
+        cmdOutput.innerHTML = '<div style="color: #888; padding: 20px; text-align: center; font-family: monospace;">Press search to query</div>';
+      }
+      cmdOutput.style.display = 'block';
+    }
+
+    // Ensure progress indicator is hidden on initial load
+    const progressDiv = document.getElementById('search-progress');
+    if (progressDiv) {
+      progressDiv.style.display = 'none';
+    }
+  }, []);
+
   const [showHelp, setShowHelp] = useState(false);
   const [filtersExpanded, setFiltersExpanded] = useState(false);
+  const [sampleQueriesExpanded, setSampleQueriesExpanded] = useState(true);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -33,8 +52,14 @@ const SearchForm = ({ initialValues = {}, onSubmit }) => {
     // Clear previous results when chain changes
     const cmdOutput = document.querySelector('.js-cmd-output');
     if (cmdOutput) {
-      cmdOutput.innerHTML = '';
+      cmdOutput.innerHTML = '<div style="color: #888; padding: 20px; text-align: center; font-family: monospace;">Press search to query</div>';
       cmdOutput.style.display = 'block';
+    }
+
+    // Hide progress indicator
+    const progressDiv = document.getElementById('search-progress');
+    if (progressDiv) {
+      progressDiv.style.display = 'none';
     }
 
     // Clear React viewer state if available
@@ -42,7 +67,7 @@ const SearchForm = ({ initialValues = {}, onSubmit }) => {
       window.clearMevlogViewer();
     }
 
-    // Auto-run query with new chain
+    // Update URL without auto-running query
     const params = new URLSearchParams();
     const updatedFormData = { ...formData, chain_id: chainId || '' };
 
@@ -56,21 +81,24 @@ const SearchForm = ({ initialValues = {}, onSubmit }) => {
       }
     });
 
-    // Update URL without page reload
     const queryString = params.toString();
     const url = queryString ? `/search?${queryString}` : '/search';
     window.history.pushState({}, '', url);
-
-    // Establish WebSocket connection with new chain
-    startWebSocketConnection(params);
   };
 
   const wsProtocol = () => {
     return window.location.protocol === 'https:' ? 'wss:' : 'ws:';
   };
 
+
   const startWebSocketConnection = (params) => {
     const socket = new WebSocket(`${wsProtocol()}//${window.location.host}/ws/search?${params.toString()}`);
+
+    // Show progress indicator
+    const progressDiv = document.getElementById('search-progress');
+    if (progressDiv) {
+      progressDiv.style.display = 'block';
+    }
 
     socket.addEventListener('open', (event) => {
       console.log('Connected to WebSocket server');
@@ -119,10 +147,20 @@ const SearchForm = ({ initialValues = {}, onSubmit }) => {
 
     socket.addEventListener('close', (event) => {
       console.log('Disconnected from WebSocket server');
+
+      // Hide progress indicator when connection closes
+      if (progressDiv) {
+        progressDiv.style.display = 'none';
+      }
     });
 
     socket.addEventListener('error', (event) => {
       console.error('WebSocket error:', event);
+
+      // Hide progress indicator on error
+      if (progressDiv) {
+        progressDiv.style.display = 'none';
+      }
     });
   };
 
@@ -137,6 +175,12 @@ const SearchForm = ({ initialValues = {}, onSubmit }) => {
     if (cmdOutput) {
       cmdOutput.innerHTML = '';
       cmdOutput.style.display = 'block'; // Show output container for new results
+    }
+
+    // Hide progress indicator from any previous search
+    const progressDiv = document.getElementById('search-progress');
+    if (progressDiv) {
+      progressDiv.style.display = 'none';
     }
 
     // Clear React viewer state if available
@@ -170,6 +214,10 @@ const SearchForm = ({ initialValues = {}, onSubmit }) => {
 
   const toggleFilters = () => {
     setFiltersExpanded(prev => !prev);
+  };
+
+  const toggleSampleQueries = () => {
+    setSampleQueriesExpanded(prev => !prev);
   };
 
   // Styling constants
@@ -360,6 +408,115 @@ const SearchForm = ({ initialValues = {}, onSubmit }) => {
     marginBottom: '24px'
   };
 
+  const sampleQueryContainerStyle = {
+    marginBottom: '24px',
+    border: '1px solid #333',
+    borderRadius: '6px',
+    overflow: 'hidden'
+  };
+
+  const sampleQueryStyle = {
+    backgroundColor: '#2a2a2a',
+    border: 'none',
+    borderBottom: '1px solid #333',
+    color: '#fff',
+    cursor: 'pointer',
+    fontSize: '13px',
+    fontFamily: 'monospace',
+    padding: '12px 16px',
+    textAlign: 'left',
+    transition: 'background-color 0.2s ease',
+    width: '100%'
+  };
+
+  const sampleQueries = [
+    {
+      title: 'Find jaredfromsubway.eth transactions',
+      params: {
+        from: 'jaredfromsubway.eth',
+        chain_id: '1'
+      }
+    },
+    {
+      title: 'Query for txs that transferred PEPE token',
+      params: {
+        event: 'Transfer(address,address,uint256)|0x6982508145454ce325ddbe47a25d4ec3d2311933',
+        chain_id: '1'
+      }
+    },
+    {
+      title: 'Find transactions that transferred over 100k USDC',
+      params: {
+        erc20_transfer: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48|ge100000',
+        chain_id: '1'
+      }
+    },
+    {
+      title: 'Find new smart contract deployments',
+      params: {
+        to: 'CREATE',
+        chain_id: '1'
+      }
+    },
+    {
+      title: 'Position 0 txs that did not emit any, no Swap',
+      params: {
+        position: '0',
+        not_event: '/(Swap).+/',
+        chain_id: '1'
+      }
+    },
+    {
+      title: 'Txs that paid over 0.01 ether in gas fees',
+      params: {
+        tx_cost: 'ge0.01ether',
+        chain_id: '1'
+      }
+    }
+  ].map(query => ({
+    ...query,
+    params: {
+      ...query.params,
+      blocks: '100:latest'
+    }
+  }));
+
+  const applySampleQuery = (sampleParams) => {
+    // Reset form data to defaults first
+    const resetData = {
+      blocks: '',
+      position: '',
+      from: '',
+      to: '',
+      event: '',
+      not_event: '',
+      method: '',
+      erc20_transfer: '',
+      tx_cost: '',
+      gas_price: '',
+      chain_id: ''
+    };
+
+    // Apply sample parameters
+    const updatedData = { ...resetData, ...sampleParams };
+    setFormData(updatedData);
+
+    // Expand filters to show the populated fields
+    setFiltersExpanded(true);
+
+    // Show placeholder message in results area
+    const cmdOutput = document.querySelector('.js-cmd-output');
+    if (cmdOutput) {
+      cmdOutput.innerHTML = '<div style="color: #888; padding: 20px; text-align: center; font-family: monospace;">Press search to query</div>';
+      cmdOutput.style.display = 'block';
+    }
+
+    // Clear React viewer state if available
+    if (window.clearMevlogViewer) {
+      window.clearMevlogViewer();
+    }
+  };
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -370,6 +527,38 @@ const SearchForm = ({ initialValues = {}, onSubmit }) => {
               onChainChange={handleChainChange}
               initialChainId={formData.chain_id ? parseInt(formData.chain_id) : null}
             />
+          </div>
+
+          {/* Sample Queries */}
+          <div style={sampleQueryContainerStyle}>
+            <div
+              style={sectionHeaderStyle}
+              onClick={toggleSampleQueries}
+            >
+              <span style={sectionTitleStyle}>Sample Queries</span>
+              <span style={sampleQueriesExpanded ? expandedIconStyle : expandIconStyle}>
+                ▶
+              </span>
+            </div>
+            {sampleQueriesExpanded && (
+              <div style={sectionContentStyle}>
+                {sampleQueries.map((query, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    style={{
+                      ...sampleQueryStyle,
+                      borderBottom: index === sampleQueries.length - 1 ? 'none' : '1px solid #333'
+                    }}
+                    onClick={() => applySampleQuery(query.params)}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = '#3a3a3a'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = '#2a2a2a'}
+                  >
+                    {query.title}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Filters Section */}

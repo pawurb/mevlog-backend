@@ -1,6 +1,6 @@
 use crate::controllers::html::search_controller::SearchParams;
 use crate::controllers::{
-    base_controller::{get_default_blocks, get_default_position},
+    base_controller::get_default_blocks,
     websocket::base_controller::{cmd_output_stream, stream_output_lines},
 };
 use crate::misc::rpc_utils::get_random_rpc_url;
@@ -48,9 +48,9 @@ async fn handle_socket(socket: WebSocket, params: SearchParams) {
 
     cmd.arg("-b").arg(blocks);
 
-    let position = get_default_position(params.position.clone());
-
-    cmd.arg("-p").arg(position);
+    if let Some(position) = params.position.clone() {
+        cmd.arg("-p").arg(position);
+    }
 
     if let Some(from) = params.from.clone() {
         cmd.arg("--from").arg(from);

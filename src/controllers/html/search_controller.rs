@@ -8,9 +8,7 @@ use eyre::Result;
 use reqwest::StatusCode;
 use serde::Deserialize;
 
-use crate::controllers::base_controller::{
-    error_message, get_default_blocks, get_default_position, loading_spinner,
-};
+use crate::controllers::base_controller::{error_message, get_default_blocks, loading_spinner};
 
 #[derive(Template)]
 #[template(path = "search.html")]
@@ -35,12 +33,11 @@ struct SearchTemplate {
 impl SearchTemplate {
     pub fn new(params: SearchParams, output: String) -> Self {
         let blocks = get_default_blocks(params.blocks);
-        let position = get_default_position(params.position);
 
         Self {
             output,
             blocks,
-            position,
+            position: params.position.unwrap_or_default(),
             from: params.from.unwrap_or_default(),
             to: params.to.unwrap_or_default(),
             event: params.event.unwrap_or_default(),
@@ -97,7 +94,7 @@ pub async fn search(
     };
 
     let (output, status) = match params.validate().await {
-        Ok(_) => (loading_spinner(), StatusCode::OK),
+        Ok(_) => ("<div style='color: #888; padding: 20px; text-align: center; font-family: monospace;'>Press search to query</div>".to_string(), StatusCode::OK),
         Err(e) => (error_message(&e.to_string()), StatusCode::BAD_REQUEST),
     };
 
