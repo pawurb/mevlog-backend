@@ -33,6 +33,16 @@ const SearchForm = ({ initialValues = {}, onSubmit }) => {
     if (progressDiv) {
       progressDiv.style.display = 'none';
     }
+
+    // Check if URL contains search params and automatically start WebSocket connection
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.toString() != "") {
+      // Clear the placeholder and show loading state
+      if (cmdOutput) {
+        cmdOutput.innerHTML = "<div class='spinner-container'><div class='spinner'></div><div>Loading...</div></div>";
+      }
+      startWebSocketConnection(urlParams);
+    }
   }, []);
 
   const [showHelp, setShowHelp] = useState(false);
