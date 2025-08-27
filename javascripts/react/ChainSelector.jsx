@@ -192,7 +192,7 @@ const ChainSelector = ({ onChainChange, initialChainId = null, disabled = false 
     color: '#fff',
     fontSize: '14px',
     padding: '8px 12px',
-    minWidth: '300px',
+    minWidth: '150px',
     width: '100%',
     cursor: 'text',
     outline: 'none',
@@ -210,7 +210,7 @@ const ChainSelector = ({ onChainChange, initialChainId = null, disabled = false 
     fontWeight: '500',
     textTransform: 'uppercase',
     letterSpacing: '0.5px',
-    minWidth: '80px'
+    minWidth: '60px'
   };
 
   const dropdownStyle = {
@@ -256,7 +256,7 @@ const ChainSelector = ({ onChainChange, initialChainId = null, disabled = false 
         <input
           ref={inputRef}
           type="text"
-          placeholder="Type chain name or ID..."
+          placeholder="Name or ID."
           value={chainQuery}
           onChange={handleInputChange}
           onFocus={handleInputFocus}

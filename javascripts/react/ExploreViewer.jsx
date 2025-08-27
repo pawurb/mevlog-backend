@@ -16,21 +16,21 @@ const ExploreViewer = () => {
   const updateURLParams = (chainId = null, blockNumber = null) => {
     const url = new URL(window.location);
     const params = new URLSearchParams(url.search);
-    
+
     // Only set chain_id if it's not the default (1)
     if (chainId && chainId !== 1) {
       params.set('chain_id', chainId);
     } else {
       params.delete('chain_id');
     }
-    
+
     // Only set block_number if it's not "latest" or null
     if (blockNumber && blockNumber !== 'latest') {
       params.set('block_number', blockNumber);
     } else {
       params.delete('block_number');
     }
-    
+
     // Update URL without triggering page reload
     const newUrl = `${url.pathname}${params.toString() ? '?' + params.toString() : ''}`;
     window.history.replaceState({}, '', newUrl);
@@ -90,7 +90,7 @@ const ExploreViewer = () => {
   const fetchExploreData = async (blockNumber = null, chainId = null, skipUrlUpdate = false) => {
     try {
       setLoading(true);
-  
+
       // Extract RPC URL from current page URL params if available
       const urlParams = new URLSearchParams(window.location.search);
       const rpcUrl = urlParams.get('rpc_url');
@@ -141,7 +141,7 @@ const ExploreViewer = () => {
         const errorData = await response.json();
         const errorMessage = errorData.error || `HTTP ${response.status}: ${response.statusText}`;
         setLoading(false);
-        
+
         // Pass error to MevlogViewer
         if (window.updateMevlogViewer) {
           window.updateMevlogViewer({ error: errorMessage });
@@ -149,7 +149,7 @@ const ExploreViewer = () => {
       }
     } catch (err) {
       setLoading(false);
-      
+
       // Pass error to MevlogViewer
       if (window.updateMevlogViewer) {
         window.updateMevlogViewer({ error: `Failed to fetch explore data: ${err.message}` });
@@ -200,15 +200,15 @@ const ExploreViewer = () => {
     const container = document.getElementById('explore-react-root');
     const initialChainId = container?.getAttribute('data-chain-id');
     const initialBlockNumber = container?.getAttribute('data-block-number');
-    
+
     // Parse parameters and set initial state
     const chainId = initialChainId && initialChainId !== '1' ? parseInt(initialChainId) : null;
     const blockNumber = initialBlockNumber && initialBlockNumber !== 'latest' ? initialBlockNumber : null;
-    
+
     if (chainId) {
       setSelectedChainId(chainId);
     }
-    
+
     fetchChainData(chainId);
     fetchExploreData(blockNumber, chainId);
   }, []);
@@ -223,7 +223,7 @@ const ExploreViewer = () => {
     fontWeight: 'bold',
     padding: '8px 16px',
     margin: '0 8px',
-    minWidth: '120px',
+    minWidth: '60px',
     height: '36px',
     display: 'flex',
     alignItems: 'center',
@@ -388,7 +388,7 @@ const ExploreViewer = () => {
         `}
       </style>
 
-      <ChainSelector 
+      <ChainSelector
         onChainChange={handleChainChange}
         initialChainId={selectedChainId}
         disabled={loading}
@@ -433,7 +433,7 @@ const ExploreViewer = () => {
         </div>
       </div>
 
-      <CommandBuilder 
+      <CommandBuilder
         type="explore"
         params={{
           chain_id: selectedChainId,
@@ -452,7 +452,7 @@ const ExploreViewer = () => {
                 disabled={loading || currentBlockNumber <= 0}
                 style={loading || currentBlockNumber <= 0 ? disabledButtonStyle : navButtonStyle}
               >
-                ← Prev
+                {'◀'}
               </button>
               <span className="current-block" style={currentBlockStyle}>
                 {chainData && chainData.explorer_url ? (
@@ -462,10 +462,10 @@ const ExploreViewer = () => {
                     rel="noopener noreferrer"
                     style={{ color: '#4a9eff', textDecoration: 'none' }}
                   >
-                    Block #{currentBlockNumber}
+                    #{currentBlockNumber}
                   </a>
                 ) : (
-                  `Block #${currentBlockNumber}`
+                  `#${currentBlockNumber}`
                 )}
               </span>
               <button
@@ -473,7 +473,7 @@ const ExploreViewer = () => {
                 disabled={loading}
                 style={loading ? disabledButtonStyle : navButtonStyle}
               >
-                Next →
+                {'▶'}
               </button>
             </>
           )}

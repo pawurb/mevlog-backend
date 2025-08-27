@@ -623,7 +623,6 @@ a[href="/explore"] button.active {
 }
 
 .main-header {
-  font-size: 2em !important;
   color: var(--bright-yellow) !important;
   margin: 20px auto 10px auto;
   font-weight: bold !important;
@@ -635,10 +634,25 @@ a[href="/explore"] button.active {
   font-family: var(--font-stack) !important;
 }
 
+/* Desktop styles */
+@media (min-width: 769px) {
+  .main-header {
+    font-size: 3.2em !important;
+  }
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .main-header {
+    font-size: 1.6em !important;
+  }
+}
+
+
 /* Override terminal.css restrictions specifically for our main header */
 .terminal .main-header,
 .terminal h1.main-header {
-  font-size: 3em !important;
+  font-size: 3em;
   color: var(--yellow) !important;
   font-weight: bold !important;
 }
@@ -682,10 +696,21 @@ a[href="/explore"] button.active {
 
 .feature-text h3 {
   color: var(--bright-cyan) !important;
-  font-size: 2.5em !important;
   margin-bottom: 20px;
   font-weight: bold !important;
   text-shadow: 0 0 7px rgba(84, 240, 136, 0.3);
+}
+
+@media (max-width: 768px) {
+  .feature-text h3 {
+    font-size: 1.6em !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .feature-text h3 {
+    font-size: 2.5em !important;
+  }
 }
 
 .feature-text p {
@@ -727,9 +752,24 @@ a[href="/explore"] button.active {
 
 /* Responsive design */
 @media (max-width: 768px) {
-  .main-header {
-    font-size: 2.5em;
-    margin: 30px auto 60px auto;
+  .sticky-nav {
+    padding: 8px 0;
+  }
+
+  .sticky-nav-logo {
+    height: 40px;
+    margin-right: 10px;
+    transform: translateY(2px);
+  }
+
+  .nav-left {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .nav-left button {
+    font-size: 0.9em;
+    padding: 8px 12px;
   }
 
   .feature-row,
