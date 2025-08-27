@@ -382,6 +382,23 @@ pre.output {
   margin-bottom: 20px;
 }
 
+.nav-left {
+  display: flex;
+  align-items: center !important;
+}
+
+.sticky-nav-logo {
+  height: 60px;
+  width: auto;
+  transition: opacity 0.2s ease;
+  margin-right: 15px;
+  transform: translateY(4px);
+}
+
+.sticky-nav-logo:hover {
+  opacity: 0.8;
+}
+
 /* Ensure explore and search buttons stand out in sticky nav */
 .sticky-nav a[href="/explore"] button {
   border-color: var(--bright-cyan) !important;
@@ -598,10 +615,17 @@ a[href="/explore"] button.active {
   text-align: center;
 }
 
+.main-logo {
+  max-width: 400px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
 .main-header {
   font-size: 2em !important;
   color: var(--bright-yellow) !important;
-  margin: 60px auto 30px auto;
+  margin: 20px auto 10px auto;
   font-weight: bold !important;
   text-align: center !important;
   line-height: 1.2 !important;
@@ -627,7 +651,7 @@ a[href="/explore"] button.active {
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
-  gap: 60px;
+  gap: 20px;
   margin: 20px 0;
   padding: 20px;
 }

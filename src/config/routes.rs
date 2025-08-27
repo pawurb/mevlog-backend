@@ -7,7 +7,7 @@ use axum::{
     Router,
 };
 use tower::Layer;
-use tower_http::services::ServeFile;
+use tower_http::services::{ServeDir, ServeFile};
 
 use super::cache_control;
 
@@ -45,25 +45,8 @@ pub async fn app() -> Router {
                 "assets/{deployed_at}-react-bundle.js"
             ))),
         )
-        .route_service(
-            "/favicon.ico",
-            cache_control().layer(ServeFile::new("assets/favicon.ico")),
-        )
-        .route_service(
-            "/all-chains.png",
-            cache_control().layer(ServeFile::new("assets/all-chains.png")),
-        )
-        .route_service(
-            "/find-outliers.png",
-            cache_control().layer(ServeFile::new("assets/find-outliers.png")),
-        )
-        .route_service(
-            "/custom-queries.png",
-            cache_control().layer(ServeFile::new("assets/custom-queries.png")),
-        )
-        .route_service(
-            "/open-source.png",
-            cache_control().layer(ServeFile::new("assets/open-source.png")),
+        .fallback_service(
+            cache_control().layer(ServeDir::new("assets"))
         );
 
     app
