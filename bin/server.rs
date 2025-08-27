@@ -24,7 +24,7 @@ async fn run() -> Result<()> {
 
     let app = app()
         .await
-        .layer(middleware::logging())
+        .layer(from_fn(middleware::request_tracing))
         .layer(from_fn(middleware::only_ssl))
         .layer(TimeoutLayer::new(Duration::from_secs(10)))
         .layer(CompressionLayer::new())

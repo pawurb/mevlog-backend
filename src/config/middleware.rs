@@ -12,9 +12,10 @@ use reqwest::StatusCode;
 use time::UtcOffset;
 
 use tower_http::set_header::SetResponseHeaderLayer;
-use tower_http::trace::{self, TraceLayer};
-use tracing::Level;
+use tracing::{info_span, Instrument};
+use std::time::Instant;
 use tracing_subscriber::fmt::time::OffsetTime;
+use uuid::Uuid;
 
 #[derive(Debug, PartialEq)]
 pub enum Env {
@@ -38,12 +39,39 @@ impl Env {
     }
 }
 
-pub fn logging() -> tower_http::trace::TraceLayer<
-    tower_http::classify::SharedClassifier<tower_http::classify::ServerErrorsAsFailures>,
-> {
-    TraceLayer::new_for_http()
-        .make_span_with(trace::DefaultMakeSpan::new().level(Level::INFO))
-        .on_response(trace::DefaultOnResponse::new().level(Level::INFO))
+const STATIC_EXTENSIONS: [&str; 11] = [
+    ".js", ".css", ".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico", ".woff", ".woff2", ".ttf",
+];
+
+pub async fn request_tracing(request: Request, next: Next) -> Response {
+    let path = request.uri().path().to_string();
+
+    // Skip instrumenting static asset requests
+    if STATIC_EXTENSIONS.iter().any(|ext| path.ends_with(ext)) {
+        return next.run(request).await;
+    }
+
+    let uuid = Uuid::new_v4();
+    let uuid_str = uuid.to_string().replace("-", "");
+    let request_id = &uuid_str[0..12];
+    let method = request.method().clone();
+
+    let info_span = info_span!("req", id = %request_id, method = %method, path = %path);
+
+    async move {
+        let start = Instant::now();
+        let response = next.run(request).await;
+        let duration = start.elapsed();
+
+        tracing::info!(
+            status = %response.status(),
+            duration_ms = duration.as_millis(),
+        );
+
+        response
+    }
+    .instrument(info_span)
+    .await
 }
 
 pub async fn security_headers(request: Request, next: Next) -> Response {
@@ -130,9 +158,16 @@ pub fn init_logs(filename: &str) {
             tracing_subscriber::fmt()
                 .with_writer(file_appender)
                 .with_timer(timer)
+                .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
                 .init();
         }
-        _ => tracing_subscriber::fmt::init(),
+        _ => {
+            let filter = tracing_subscriber::EnvFilter::from_default_env();
+
+            tracing_subscriber::fmt()
+                .with_env_filter(filter)
+                .init()
+        }
     }
 }
 

@@ -22,6 +22,8 @@ pub async fn explore(
         Err(error_response) => return error_response.into_response(),
     };
 
+    tracing::debug!("params: {:?}", params);
+
     let mut cmd = AsyncCommand::new("mevlog");
     cmd.arg("search")
         .arg("-b")

@@ -46,6 +46,7 @@ pub async fn call_json_command<T: serde::de::DeserializeOwned>(
 pub async fn call_json_command_first_line<T: serde::de::DeserializeOwned>(
     cmd: &mut Command,
 ) -> Result<T, Value> {
+    tracing::trace!("cmd: {:?}", &cmd);
     let timeout_duration = Duration::from_secs(10);
 
     cmd.stdout(Stdio::piped()).stderr(Stdio::piped());

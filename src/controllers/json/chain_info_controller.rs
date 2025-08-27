@@ -38,6 +38,8 @@ pub async fn chain_info(
         Err(error_response) => return error_response.into_response(),
     };
 
+    tracing::debug!("params: {:?}", params);
+
     match fetch_chain_info_no_rpcs(params.chain_id).await {
         Ok(chain_info) => (StatusCode::OK, Json(chain_info)).into_response(),
         Err(error_json) => (StatusCode::BAD_REQUEST, Json(error_json)).into_response(),
