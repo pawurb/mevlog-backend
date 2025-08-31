@@ -4,7 +4,11 @@ use tokio::process::Command as AsyncCommand;
 
 use crate::{
     controllers::json::base_controller::{call_json_command_first_line, extract_json_query_params},
-    misc::{prices::get_price_for_chain_id, rpc_utils::get_random_rpc_url},
+    misc::{
+        prices::get_price_for_chain_id,
+        rpc_utils::get_random_rpc_url,
+        utils::{measure_end, measure_start},
+    },
 };
 
 #[derive(Debug, Deserialize)]
@@ -57,8 +61,12 @@ pub async fn explore(
 
     tracing::debug!("explore command: {:?}", &cmd);
 
+    let start = measure_start("explore cmd");
     match call_json_command_first_line::<serde_json::Value>(&mut cmd).await {
-        Ok(explore_data) => (StatusCode::OK, Json(explore_data)).into_response(),
+        Ok(explore_data) => {
+            measure_end(start);
+            (StatusCode::OK, Json(explore_data)).into_response()
+        }
         Err(error_json) => (StatusCode::BAD_REQUEST, Json(error_json)).into_response(),
     }
 }

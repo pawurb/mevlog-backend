@@ -81,6 +81,7 @@ async fn populate_mainnet_cache() -> Result<()> {
                 continue;
             }
         };
+        measure_end(start);
 
         if new_block_number % 10 == 0 {
             let uptime_url = std::env::var("UPTIME_URL_MAINNET_CACHE")
@@ -94,8 +95,6 @@ async fn populate_mainnet_cache() -> Result<()> {
                 }
             }
         }
-
-        measure_end(start);
     }
 
     #[allow(unreachable_code)]
