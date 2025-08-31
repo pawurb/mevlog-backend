@@ -5,7 +5,7 @@ use alloy::providers::{Provider, ProviderBuilder};
 use eyre::Result;
 use mevlog_backend::config::{middleware, schedule::get_schedule};
 use mevlog_backend::misc::utils::{measure_end, measure_start, uptime_ping};
-use tracing::{error, info};
+use tracing::{debug, error, info};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -59,7 +59,7 @@ async fn populate_mainnet_cache() -> Result<()> {
 
         if new_block_number == current_block_number {
             tokio::time::sleep(tokio::time::Duration::from_secs(4)).await;
-            info!("No new blocks, sleeping: {}", current_block_number);
+            debug!("No new blocks, sleeping: {}", current_block_number);
             continue;
         }
 

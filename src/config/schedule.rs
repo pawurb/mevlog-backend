@@ -1,7 +1,7 @@
 use eyre::Result;
 use tokio_cron_scheduler::{Job, JobScheduler};
 
-use crate::misc::utils::uptime_ping;
+use crate::misc::{prices::update_prices_cache, utils::uptime_ping};
 
 pub async fn get_schedule() -> Result<JobScheduler> {
     let mut sched = JobScheduler::new().await?;
@@ -18,6 +18,21 @@ pub async fn get_schedule() -> Result<JobScheduler> {
                         tracing::error!("Failed to uptime ping: {}", &e);
                     }
                 };
+            })
+        })?)
+        .await?;
+
+    sched
+        .add(Job::new_async("every 1 minute", |_uuid, _l| {
+            Box::pin(async move {
+                match update_prices_cache().await {
+                    Ok(_) => {
+                        tracing::info!("Prices cache updated");
+                    }
+                    Err(e) => {
+                        tracing::error!("Failed to update prices cache: {}", &e);
+                    }
+                }
             })
         })?)
         .await?;
