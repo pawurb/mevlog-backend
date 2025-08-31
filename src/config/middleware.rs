@@ -11,9 +11,10 @@ use tower_http::cors::{Any, CorsLayer};
 use reqwest::StatusCode;
 use time::UtcOffset;
 
-use tower_http::set_header::SetResponseHeaderLayer;
-use tracing::{info_span, Instrument};
 use std::time::Instant;
+use tower_http::set_header::SetResponseHeaderLayer;
+use tracing::info_span;
+use tracing_futures::Instrument;
 use tracing_subscriber::fmt::time::OffsetTime;
 use uuid::Uuid;
 
@@ -164,9 +165,7 @@ pub fn init_logs(filename: &str) {
         _ => {
             let filter = tracing_subscriber::EnvFilter::from_default_env();
 
-            tracing_subscriber::fmt()
-                .with_env_filter(filter)
-                .init()
+            tracing_subscriber::fmt().with_env_filter(filter).init()
         }
     }
 }
