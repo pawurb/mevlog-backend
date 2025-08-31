@@ -23,7 +23,7 @@ pub async fn get_schedule() -> Result<JobScheduler> {
         .await?;
 
     sched
-        .add(Job::new_async("every 1 minute", |_uuid, _l| {
+        .add(Job::new_async("every 5 minutes", |_uuid, _l| {
             Box::pin(async move {
                 match update_prices_cache().await {
                     Ok(_) => {
