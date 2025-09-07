@@ -450,6 +450,17 @@ a[href="/search"] button.active {
   border-color: var(--yellow) !important;
 }
 
+/* Login button styling */
+a[href="/auth/github/login"] button {
+  border-color: var(--yellow) !important;
+  color: var(--yellow) !important;
+}
+
+a[href="/auth/github/login"] button:hover {
+  background-color: var(--yellow) !important;
+  color: var(--background) !important;
+}
+
 /* Explore button active state */
 a[href="/explore"] button.active {
   background-color: var(--bright-cyan) !important;
