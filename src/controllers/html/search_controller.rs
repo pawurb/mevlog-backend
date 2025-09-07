@@ -1,9 +1,10 @@
+use crate::auth::{get_user_from_cookies, GitHubUser};
 use crate::config::{host, routes::html_response};
 use crate::controllers::base_controller::empty_string_as_none;
 use crate::controllers::json::base_controller::extract_query_params;
 use crate::misc::utils::deployed_at;
 use askama::Template;
-use axum::{extract::Query, response::IntoResponse};
+use axum::{extract::Query, http::HeaderMap, response::IntoResponse};
 use eyre::Result;
 use reqwest::StatusCode;
 use serde::Deserialize;
@@ -28,10 +29,11 @@ struct SearchTemplate {
     page: String,
     deployed_at: String,
     chain_id: String,
+    user: Option<GitHubUser>,
 }
 
 impl SearchTemplate {
-    pub fn new(params: SearchParams, output: String) -> Self {
+    pub fn new(params: SearchParams, output: String, user: Option<GitHubUser>) -> Self {
         let blocks = get_default_blocks(params.blocks);
 
         Self {
@@ -50,6 +52,7 @@ impl SearchTemplate {
             page: "search".to_string(),
             deployed_at: deployed_at(),
             chain_id: params.chain_id.unwrap_or(1).to_string(),
+            user,
         }
     }
 }
@@ -87,7 +90,10 @@ impl SearchParams {
 
 pub async fn search(
     query: Result<Query<SearchParams>, axum::extract::rejection::QueryRejection>,
+    headers: HeaderMap,
 ) -> impl IntoResponse {
+    let user = get_user_from_cookies(&headers);
+
     let params = match extract_query_params(query) {
         Ok(params) => params,
         Err(e) => return error_message(&e).into_response(),
@@ -98,7 +104,7 @@ pub async fn search(
         Err(e) => (error_message(&e.to_string()), StatusCode::BAD_REQUEST),
     };
 
-    let template = SearchTemplate::new(params, output);
+    let template = SearchTemplate::new(params, output, user);
 
     html_response(template.render().unwrap(), status)
 }

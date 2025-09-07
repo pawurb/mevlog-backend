@@ -3,6 +3,10 @@
 .env-remote
 .env
 .envrc
+*.db-wal
+*.db-shm
+*.db
 
 assets/
 javascripts/dist/
+

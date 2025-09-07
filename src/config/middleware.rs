@@ -17,6 +17,7 @@ use tracing::info_span;
 use tracing_futures::Instrument;
 use tracing_subscriber::fmt::time::OffsetTime;
 use uuid::Uuid;
+use crate::{auth::get_user_from_cookies, database::Database};
 
 #[derive(Debug, PartialEq)]
 pub enum Env {
@@ -94,6 +95,29 @@ pub async fn security_headers(request: Request, next: Next) -> Response {
         HeaderValue::from_static("Strict-Transport-Security: max-age=31536000; includeSubDomains"),
     );
 
+    response
+}
+
+pub async fn update_user_activity(request: Request, next: Next) -> Response {
+    let headers = request.headers().clone();
+    
+    // Get database from request extensions
+    let database = request.extensions().get::<Database>().cloned();
+    
+    let response = next.run(request).await;
+    
+    // Try to get user from cookies and update their last_active_at
+    if let (Some(github_user), Some(db)) = (get_user_from_cookies(&headers), database) {
+        let login = github_user.login.clone();
+        
+        // Spawn background task to update user activity
+        tokio::spawn(async move {
+            if let Err(e) = db.get_or_create_user(&login).await {
+                tracing::warn!("Failed to update user activity: {:?}", e);
+            }
+        });
+    }
+    
     response
 }
 
