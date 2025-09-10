@@ -14,9 +14,10 @@ pub async fn send_new_user_notification(username: &str) -> Result<()> {
 
     let client = Client::new();
     let payload = json!({
-        "text": format!("New gh user: **{}**", username),
-        "username": "MEVlog Bot",
-        "icon_emoji": ":goat:"
+        "text": format!("New gh user: {}", username),
+        "username": "mevlog-backend",
+        "icon_emoji": ":goat:",
+        "channel": "#mevlog-alerts"
     });
 
     match client.post(&webhook_url).json(&payload).send().await {
