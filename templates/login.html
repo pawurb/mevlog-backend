@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="hero-section">
+  <h1 class="main-header">GitHub Authentication Required</h1>
+  
+  <div class="project-description" style="text-align: center; max-width: 800px; margin: 0 auto;">
+    <p>
+      To keep the service responsive for everyone while relying on public RPC nodes, exploring wider block ranges or non-mainnet chains requires GitHub login.
+    </p>
+    
+    <p>
+      This helps us manage API rate limits and ensure fair usage across all users. Authentication is powered by GitHub OAuth and is completely free.
+    </p>
+    
+    <div style="margin: 40px 0;">
+      {% match user %}
+        {% when Some with (github_user) %}
+          <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 20px;">
+            <img src="{{ github_user.avatar_url }}" alt="Avatar" style="width: 48px; height: 48px; border-radius: 50%;">
+            <span style="color: #ccc; font-size: 18px;">Welcome, {{ github_user.login }}!</span>
+          </div>
+          <p style="color: #90EE90;">✓ You are already logged in and have access to all features.</p>
+          <div style="margin-top: 30px;">
+            <a href="/explore">
+              <button class="btn btn-primary" style="margin-right: 10px;">Start Exploring</button>
+            </a>
+            <a href="/search">
+              <button class="btn btn-primary">Advanced Search</button>
+            </a>
+          </div>
+        {% when None %}
+          <p style="color: #FFA500; margin-bottom: 30px;">You need to log in to access features like:</p>
+          <ul style="list-style: none; padding: 0; color: #ccc; text-align: left; max-width: 500px; margin: 0 auto 30px;">
+            <li style="margin: 10px 0;">• Accessing non-mainnet chains</li>
+            <li style="margin: 10px 0;">• Exploring wider block ranges</li>
+          </ul>
+          <a href="/auth/github/login">
+            <button class="btn btn-ghost" style="font-size: 18px; padding: 15px 30px;">
+              🚀 Login with GitHub
+            </button>
+          </a>
+      {% endmatch %}
+    </div>
+    
+    <div style="margin-top: 50px; padding: 20px; background-color: rgba(255, 255, 255, 0.05); border-radius: 8px;">
+      <h3 style="color: #FFD700; margin-bottom: 15px;">Why GitHub Authentication?</h3>
+      <p style="text-align: left; color: #ccc; line-height: 1.6;">
+        • <strong>Rate Limiting:</strong> Public RPC nodes have strict rate limits. Authentication helps us distribute usage fairly.<br>
+        • <strong>Service Stability:</strong> Prevents abuse and ensures the service remains available for all users.<br>
+        • <strong>Privacy:</strong> We only access your public GitHub profile. No private data is collected.<br>
+      </p>
+    </div>
+    
+    <p style="margin-top: 30px; color: #888;">
+      Questions? Check out the project on <a class='yellow' target='_blank' href="https://github.com/pawurb/mevlog-rs">GitHub</a> or follow updates on <a class='yellow' target='_blank' href="https://x.com/_pawurb">Twitter</a>.
+    </p>
+  </div>
+</div>
+
+{% endblock %}

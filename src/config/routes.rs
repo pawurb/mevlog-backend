@@ -20,6 +20,7 @@ pub async fn app() -> Router {
 
     let app = Router::new()
         .route("/", get(html::home_controller::home))
+        .route("/login", get(html::login_controller::login))
         .route("/search", get(html::search_controller::search))
         .route("/terms", get(html::terms_controller::terms))
         .route("/explore", get(html::explore_controller::explore))
