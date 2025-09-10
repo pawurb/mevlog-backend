@@ -166,9 +166,20 @@ async fn callback(
     };
 
     // Create or get user from database
-    if let Err(e) = auth_state.database.get_or_create_user(&github_user.login).await {
-        tracing::error!("Failed to create/update user in database: {:?}", e);
-        return StatusCode::INTERNAL_SERVER_ERROR.into_response();
+    let (_user, is_new_user) = match auth_state.database.get_or_create_user(&github_user.login).await {
+        Ok(result) => result,
+        Err(e) => {
+            tracing::error!("Failed to create/update user in database: {:?}", e);
+            return StatusCode::INTERNAL_SERVER_ERROR.into_response();
+        }
+    };
+
+    // Send Slack notification for new users
+    if is_new_user {
+        if let Err(e) = crate::slack::send_new_user_notification(&github_user.login).await {
+            tracing::error!("Failed to send Slack notification for new user {}: {:?}", github_user.login, e);
+            // Don't fail the authentication if Slack notification fails
+        }
     }
 
     // Store user in encrypted cookie

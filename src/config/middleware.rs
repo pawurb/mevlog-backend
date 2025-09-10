@@ -112,8 +112,19 @@ pub async fn update_user_activity(request: Request, next: Next) -> Response {
         
         // Spawn background task to update user activity
         tokio::spawn(async move {
-            if let Err(e) = db.get_or_create_user(&login).await {
-                tracing::warn!("Failed to update user activity: {:?}", e);
+            match db.get_or_create_user(&login).await {
+                Ok((_, is_new_user)) => {
+                    // In theory this should never be a new user since they already have cookies,
+                    // but let's handle it just in case
+                    if is_new_user {
+                        if let Err(e) = crate::slack::send_new_user_notification(&login).await {
+                            tracing::error!("Failed to send Slack notification for user {}: {:?}", login, e);
+                        }
+                    }
+                },
+                Err(e) => {
+                    tracing::warn!("Failed to update user activity: {:?}", e);
+                }
             }
         });
     }

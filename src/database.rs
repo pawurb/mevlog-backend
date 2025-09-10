@@ -110,15 +110,16 @@ impl Database {
         Ok(())
     }
 
-    pub async fn get_or_create_user(&self, login: &str) -> Result<User> {
+    pub async fn get_or_create_user(&self, login: &str) -> Result<(User, bool)> {
         if let Some(user) = self.get_user_by_login(login).await? {
             self.update_user_last_active(&user.id).await?;
-            Ok(User {
+            Ok((User {
                 last_active_at: Utc::now(),
                 ..user
-            })
+            }, false))
         } else {
-            self.create_user(login).await
+            let user = self.create_user(login).await?;
+            Ok((user, true))
         }
     }
 }
