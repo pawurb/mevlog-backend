@@ -54,7 +54,8 @@ pub async fn app() -> Router {
                 "assets/{deployed_at}-react-bundle.js"
             ))),
         )
-        .fallback_service(cache_control().layer(ServeDir::new("assets")));
+        .fallback_service(cache_control().layer(ServeDir::new("assets")))
+        .fallback(html::not_found_controller::not_found);
 
     app
 }
