@@ -1,9 +1,10 @@
-use axum::{extract::Query, http::StatusCode, response::IntoResponse, Json};
+use axum::{extract::Query, http::{HeaderMap, StatusCode}, response::IntoResponse, Json};
 use serde::Deserialize;
 use tokio::process::Command as AsyncCommand;
 
 use crate::{
-    controllers::json::base_controller::{call_json_command_first_line, extract_json_query_params},
+    auth::get_user_from_cookies,
+    controllers::json::base_controller::{call_json_command_first_line, extract_json_query_params, error_json_response},
     misc::{
         prices::get_price_for_chain_id,
         rpc_utils::get_random_rpc_url,
@@ -20,6 +21,7 @@ pub struct ExploreParams {
 
 pub async fn explore(
     query: Result<Query<ExploreParams>, axum::extract::rejection::QueryRejection>,
+    headers: HeaderMap,
 ) -> impl IntoResponse {
     let params = match extract_json_query_params(query) {
         Ok(params) => params,
@@ -27,6 +29,18 @@ pub async fn explore(
     };
 
     tracing::debug!("params: {:?}", params);
+
+    let chain_id = params.chain_id.unwrap_or(1);
+
+    // Check if user is authenticated for non-mainnet chains
+    if chain_id != 1 {
+        let user = get_user_from_cookies(&headers);
+        if user.is_none() {
+            return error_json_response(
+                "Authentication required for non-mainnet chains. Please login with GitHub."
+            ).into_response();
+        }
+    }
 
     let mut cmd = AsyncCommand::new("mevlog");
     cmd.arg("search")
@@ -43,8 +57,6 @@ pub async fn explore(
         .arg("--latest-offset") // Improves caching
         .arg("1");
     cmd.env("RUST_LOG", "off");
-
-    let chain_id = params.chain_id.unwrap_or(1);
 
     let price = get_price_for_chain_id(chain_id).await;
 

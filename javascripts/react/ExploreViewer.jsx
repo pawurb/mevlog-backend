@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import MevlogViewer from './MevlogViewer';
 import ChainSelector from './ChainSelector';
 import CommandBuilder from './CommandBuilder';
+import LoginPopup from './LoginPopup';
 
 const ExploreViewer = () => {
   const [loading, setLoading] = useState(true);
@@ -12,6 +13,15 @@ const ExploreViewer = () => {
   const [selectedChainId, setSelectedChainId] = useState(null);
   const [loadingMessage, setLoadingMessage] = useState('Loading transactions...');
   const [isChangingChain, setIsChangingChain] = useState(false);
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
+
+  // Helper function to check if user is authenticated
+  const isUserAuthenticated = () => {
+    // Check if there's a user avatar or logout button in the navigation
+    const userAvatar = document.querySelector('img[alt="Avatar"]');
+    const logoutButton = document.querySelector('a[href="/auth/github/logout"]');
+    return userAvatar && logoutButton;
+  };
 
   const updateURLParams = (chainId = null, blockNumber = null) => {
     const url = new URL(window.location);
@@ -204,6 +214,13 @@ const ExploreViewer = () => {
     // Parse parameters and set initial state
     const chainId = initialChainId && initialChainId !== '1' ? parseInt(initialChainId) : null;
     const blockNumber = initialBlockNumber && initialBlockNumber !== 'latest' ? initialBlockNumber : null;
+
+    // Check if this is a non-mainnet chain and user is not authenticated
+    if (chainId && chainId !== 1 && !isUserAuthenticated()) {
+      setShowLoginPopup(true);
+      setLoading(false);
+      return;
+    }
 
     if (chainId) {
       setSelectedChainId(chainId);
@@ -505,6 +522,18 @@ const ExploreViewer = () => {
           </div>
         )}
       </div>
+
+      {showLoginPopup && (
+        <LoginPopup
+          onClose={() => {
+            setShowLoginPopup(false);
+            window.location.href = '/explore';
+          }}
+          onLogin={() => {
+            window.location.href = '/auth/github/login';
+          }}
+        />
+      )}
     </div>
   );
 };

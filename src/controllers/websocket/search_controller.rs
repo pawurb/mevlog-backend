@@ -1,3 +1,4 @@
+use crate::auth::get_user_from_cookies;
 use crate::controllers::html::search_controller::SearchParams;
 use crate::controllers::{
     base_controller::get_default_blocks,
@@ -6,26 +7,43 @@ use crate::controllers::{
 use crate::misc::rpc_utils::get_random_rpc_url;
 use axum::{
     extract::{
-        ws::{WebSocket, WebSocketUpgrade},
+        ws::{Message, WebSocket, WebSocketUpgrade},
         Query,
     },
+    http::HeaderMap,
     response::IntoResponse,
 };
 
-use futures::stream::StreamExt;
+use futures::{stream::StreamExt, SinkExt};
 use tokio::process::Command;
 
 pub async fn ws_handler(
     ws: WebSocketUpgrade,
     Query(params): Query<SearchParams>,
+    headers: HeaderMap,
 ) -> impl IntoResponse {
-    ws.on_upgrade(|socket| handle_socket(socket, params))
+    ws.on_upgrade(|socket| handle_socket(socket, params, headers))
 }
 
-async fn handle_socket(socket: WebSocket, params: SearchParams) {
-    let (sender, _receiver) = socket.split();
+async fn handle_socket(socket: WebSocket, params: SearchParams, headers: HeaderMap) {
+    let (mut sender, _receiver) = socket.split();
 
     let chain_id = params.chain_id.unwrap_or(1);
+
+    // Check if user is authenticated for non-mainnet chains
+    if chain_id != 1 {
+        let user = get_user_from_cookies(&headers);
+        if user.is_none() {
+            let error_message = Message::Text(
+                serde_json::json!({
+                    "error": "Authentication required for non-mainnet chains. Please login with GitHub."
+                }).to_string().into()
+            );
+            let _ = sender.send(error_message).await;
+            let _ = sender.close().await;
+            return;
+        }
+    }
 
     let mut cmd = Command::new("mevlog");
 

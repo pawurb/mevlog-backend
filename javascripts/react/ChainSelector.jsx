@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import LoginPopup from './LoginPopup';
 
 // Default popular chains to show when search is empty
 const DEFAULT_CHAINS = [
@@ -20,8 +21,17 @@ const ChainSelector = ({ onChainChange, initialChainId = null, disabled = false 
   const [selectedChainId, setSelectedChainId] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
   const inputRef = useRef(null);
   const dropdownRef = useRef(null);
+
+  // Helper function to check if user is authenticated
+  const isUserAuthenticated = () => {
+    // Check if there's a user avatar or logout button in the navigation
+    const userAvatar = document.querySelector('img[alt="Avatar"]');
+    const logoutButton = document.querySelector('a[href="/auth/github/logout"]');
+    return userAvatar && logoutButton;
+  };
 
   const fetchAvailableChains = async ({ filter = null, chainId = null } = {}) => {
     try {
@@ -54,6 +64,14 @@ const ChainSelector = ({ onChainChange, initialChainId = null, disabled = false 
   };
 
   const selectChain = (chain) => {
+    // Check if this is a non-mainnet chain and user is not authenticated
+    if (chain.chain_id !== 1 && !isUserAuthenticated()) {
+      setShowLoginPopup(true);
+      setShowDropdown(false);
+      setFocusedIndex(-1);
+      return;
+    }
+
     setSelectedChainId(chain.chain_id);
     setChainQuery(`${chain.name} (ID: ${chain.chain_id})`);
     setShowDropdown(false);
@@ -288,6 +306,15 @@ const ChainSelector = ({ onChainChange, initialChainId = null, disabled = false 
             </div>
           ))}
         </div>
+      )}
+
+      {showLoginPopup && (
+        <LoginPopup
+          onClose={() => setShowLoginPopup(false)}
+          onLogin={() => {
+            window.location.href = '/auth/github/login';
+          }}
+        />
       )}
     </div>
   );
