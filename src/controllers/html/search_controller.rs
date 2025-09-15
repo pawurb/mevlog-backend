@@ -1,4 +1,4 @@
-use crate::auth::{get_user_from_cookies, GitHubUser};
+use crate::auth::{GitHubUser, get_user_from_cookies};
 use crate::config::{host, routes::html_response};
 use crate::controllers::base_controller::empty_string_as_none;
 use crate::controllers::json::base_controller::extract_query_params;

@@ -1,5 +1,5 @@
 use crate::{
-    auth::{get_user_from_cookies, GitHubUser},
+    auth::{GitHubUser, get_user_from_cookies},
     config::{host, routes::html_response},
     misc::utils::deployed_at,
 };

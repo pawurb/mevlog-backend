@@ -10,7 +10,7 @@ use tokio::{
 };
 use tokio_stream::wrappers::LinesStream;
 
-use crate::controllers::base_controller::{decorate_error_message, DATA_FETCH_ERROR};
+use crate::controllers::base_controller::{DATA_FETCH_ERROR, decorate_error_message};
 
 pub fn cmd_output_stream(
     cmd: &mut Command,
@@ -63,12 +63,11 @@ pub async fn stream_output_lines(
 
         tokio::select! {
             Some(line) = stdout_lines.next() => {
-                if let Ok(line) = line {
-                    if sender.send(Message::Text(line.into())).await.is_err() {
+                if let Ok(line) = line
+                    && sender.send(Message::Text(line.into())).await.is_err() {
                         tracing::error!("Failed to send message to client, disconnecting");
                         break;
                     }
-                }
             }
             Some(line) = stderr_lines.next() => {
                 if let Ok(line) = line {

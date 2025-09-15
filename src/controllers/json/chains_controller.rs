@@ -1,4 +1,4 @@
-use axum::{extract::Query, http::StatusCode, response::IntoResponse, Json};
+use axum::{Json, extract::Query, http::StatusCode, response::IntoResponse};
 use mevlog::ChainEntryJson;
 use serde::Deserialize;
 use tokio::process::Command as AsyncCommand;

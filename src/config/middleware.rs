@@ -11,13 +11,13 @@ use tower_http::cors::{Any, CorsLayer};
 use reqwest::StatusCode;
 use time::UtcOffset;
 
+use crate::{auth::get_user_from_cookies, database::Database};
 use std::time::Instant;
 use tower_http::set_header::SetResponseHeaderLayer;
 use tracing::info_span;
 use tracing_futures::Instrument;
 use tracing_subscriber::fmt::time::OffsetTime;
 use uuid::Uuid;
-use crate::{auth::get_user_from_cookies, database::Database};
 
 #[derive(Debug, PartialEq)]
 pub enum Env {
@@ -100,35 +100,38 @@ pub async fn security_headers(request: Request, next: Next) -> Response {
 
 pub async fn update_user_activity(request: Request, next: Next) -> Response {
     let headers = request.headers().clone();
-    
+
     // Get database from request extensions
     let database = request.extensions().get::<Database>().cloned();
-    
+
     let response = next.run(request).await;
-    
+
     // Try to get user from cookies and update their last_active_at
     if let (Some(github_user), Some(db)) = (get_user_from_cookies(&headers), database) {
         let login = github_user.login.clone();
-        
+
         // Spawn background task to update user activity
         tokio::spawn(async move {
             match db.get_or_create_user(&login).await {
                 Ok((_, is_new_user)) => {
                     // In theory this should never be a new user since they already have cookies,
                     // but let's handle it just in case
-                    if is_new_user {
-                        if let Err(e) = crate::slack::send_new_user_notification(&login).await {
-                            tracing::error!("Failed to send Slack notification for user {}: {:?}", login, e);
+                    if is_new_user
+                        && let Err(e) = crate::slack::send_new_user_notification(&login).await {
+                            tracing::error!(
+                                "Failed to send Slack notification for user {}: {:?}",
+                                login,
+                                e
+                            );
                         }
-                    }
-                },
+                }
                 Err(e) => {
                     tracing::warn!("Failed to update user activity: {:?}", e);
                 }
             }
         });
     }
-    
+
     response
 }
 

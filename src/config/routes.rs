@@ -18,7 +18,9 @@ pub async fn app() -> Router {
     let auth_state = AuthState::new().await.expect("Failed to create auth state");
     let database = auth_state.database.clone();
 
-    let app = Router::new()
+    
+
+    Router::new()
         .route("/", get(html::home_controller::home))
         .route("/login", get(html::login_controller::login))
         .route("/search", get(html::search_controller::search))
@@ -55,9 +57,7 @@ pub async fn app() -> Router {
             ))),
         )
         .fallback_service(cache_control().layer(ServeDir::new("assets")))
-        .fallback(html::not_found_controller::not_found);
-
-    app
+        .fallback(html::not_found_controller::not_found)
 }
 
 pub fn invalid_req(reason: &str) -> Response<Body> {

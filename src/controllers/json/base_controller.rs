@@ -1,4 +1,4 @@
-use axum::{extract::Query, http::StatusCode, response::IntoResponse, Json};
+use axum::{Json, extract::Query, http::StatusCode, response::IntoResponse};
 use serde::Deserialize;
 use serde_json::Value;
 use std::process::Stdio;
@@ -7,7 +7,7 @@ use tokio::io::{AsyncBufReadExt, BufReader};
 use tokio::process::Command;
 use tokio::time::timeout;
 
-use crate::controllers::base_controller::{decorate_error_message, DATA_FETCH_ERROR};
+use crate::controllers::base_controller::{DATA_FETCH_ERROR, decorate_error_message};
 
 pub async fn call_json_command<T: serde::de::DeserializeOwned>(
     cmd: &mut Command,

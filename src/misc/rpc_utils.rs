@@ -1,4 +1,4 @@
-use eyre::{bail, Result};
+use eyre::{Result, bail};
 use mevlog::ChainInfoJson;
 use rand::prelude::*;
 use std::collections::HashMap;
@@ -29,11 +29,10 @@ pub async fn get_random_rpc_url(chain_id: u64) -> Result<Option<String>> {
 async fn get_cached_rpc_urls(chain_id: u64) -> Result<Vec<String>> {
     {
         let cache_read = RPC_URL_MEMORY_CACHE.read().await;
-        if let Some(cached) = cache_read.get(&chain_id) {
-            if cached.cached_at.elapsed() < CACHE_DURATION {
+        if let Some(cached) = cache_read.get(&chain_id)
+            && cached.cached_at.elapsed() < CACHE_DURATION {
                 return Ok(cached.urls.clone());
             }
-        }
     }
 
     let chain_info = fetch_chain_info(chain_id).await?;

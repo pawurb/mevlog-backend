@@ -1,10 +1,17 @@
-use axum::{extract::Query, http::{HeaderMap, StatusCode}, response::IntoResponse, Json};
+use axum::{
+    Json,
+    extract::Query,
+    http::{HeaderMap, StatusCode},
+    response::IntoResponse,
+};
 use serde::Deserialize;
 use tokio::process::Command as AsyncCommand;
 
 use crate::{
     auth::get_user_from_cookies,
-    controllers::json::base_controller::{call_json_command_first_line, extract_json_query_params, error_json_response},
+    controllers::json::base_controller::{
+        call_json_command_first_line, error_json_response, extract_json_query_params,
+    },
     misc::{
         prices::get_price_for_chain_id,
         rpc_utils::get_random_rpc_url,
@@ -37,8 +44,9 @@ pub async fn explore(
         let user = get_user_from_cookies(&headers);
         if user.is_none() {
             return error_json_response(
-                "Authentication required for non-mainnet chains. Please login with GitHub."
-            ).into_response();
+                "Authentication required for non-mainnet chains. Please login with GitHub.",
+            )
+            .into_response();
         }
     }
 

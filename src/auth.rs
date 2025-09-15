@@ -1,15 +1,18 @@
-use crate::{cookie_crypto::{decrypt_cookie_value, encrypt_cookie_value}, database::Database};
+use crate::{
+    cookie_crypto::{decrypt_cookie_value, encrypt_cookie_value},
+    database::Database,
+};
 use axum::{
+    Router,
     extract::{Query, State},
-    http::{header::SET_COOKIE, HeaderMap, StatusCode},
+    http::{HeaderMap, StatusCode, header::SET_COOKIE},
     response::{IntoResponse, Redirect},
     routing::get,
-    Router,
 };
 use cookie::{Cookie, SameSite};
 use oauth2::{
-    basic::BasicClient, reqwest::async_http_client, AuthUrl, AuthorizationCode, ClientId,
-    ClientSecret, CsrfToken, RedirectUrl, TokenResponse, TokenUrl,
+    AuthUrl, AuthorizationCode, ClientId, ClientSecret, CsrfToken, RedirectUrl, TokenResponse,
+    TokenUrl, basic::BasicClient, reqwest::async_http_client,
 };
 use serde::{Deserialize, Serialize};
 
@@ -46,12 +49,16 @@ impl AuthState {
         .set_redirect_uri(RedirectUrl::new(redirect_url)?);
 
         // Initialize database
-        let database_url = std::env::var("DATABASE_URL")
-            .expect("DATABASE_URL environment variable not set");
-        let database = Database::new(&database_url).await
+        let database_url =
+            std::env::var("DATABASE_URL").expect("DATABASE_URL environment variable not set");
+        let database = Database::new(&database_url)
+            .await
             .expect("Failed to initialize database");
 
-        Ok(Self { github_client, database })
+        Ok(Self {
+            github_client,
+            database,
+        })
     }
 }
 
@@ -166,7 +173,11 @@ async fn callback(
     };
 
     // Create or get user from database
-    let (_user, is_new_user) = match auth_state.database.get_or_create_user(&github_user.login).await {
+    let (_user, is_new_user) = match auth_state
+        .database
+        .get_or_create_user(&github_user.login)
+        .await
+    {
         Ok(result) => result,
         Err(e) => {
             tracing::error!("Failed to create/update user in database: {:?}", e);
@@ -175,12 +186,15 @@ async fn callback(
     };
 
     // Send Slack notification for new users
-    if is_new_user {
-        if let Err(e) = crate::slack::send_new_user_notification(&github_user.login).await {
-            tracing::error!("Failed to send Slack notification for new user {}: {:?}", github_user.login, e);
+    if is_new_user
+        && let Err(e) = crate::slack::send_new_user_notification(&github_user.login).await {
+            tracing::error!(
+                "Failed to send Slack notification for new user {}: {:?}",
+                github_user.login,
+                e
+            );
             // Don't fail the authentication if Slack notification fails
         }
-    }
 
     // Store user in encrypted cookie
     let user_json = serde_json::to_string(&github_user).unwrap();

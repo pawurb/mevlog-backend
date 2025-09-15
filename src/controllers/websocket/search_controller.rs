@@ -7,14 +7,14 @@ use crate::controllers::{
 use crate::misc::rpc_utils::get_random_rpc_url;
 use axum::{
     extract::{
-        ws::{Message, WebSocket, WebSocketUpgrade},
         Query,
+        ws::{Message, WebSocket, WebSocketUpgrade},
     },
     http::HeaderMap,
     response::IntoResponse,
 };
 
-use futures::{stream::StreamExt, SinkExt};
+use futures::{SinkExt, stream::StreamExt};
 use tokio::process::Command;
 
 pub async fn ws_handler(
