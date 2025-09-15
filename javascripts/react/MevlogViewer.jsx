@@ -207,16 +207,6 @@ const MevlogViewer = ({ replaceMode = false, showBlockNumbers = true, chainData:
     };
   }, [chainData]);
 
-  if (loading) {
-    return <div className="loading"></div>;
-  }
-
-  if (transactions.length === 0) {
-    return <div className="no-data">Query returned no results</div>;
-  }
-
-  const sortedTransactions = getSortedTransactions();
-
   // Error popup styling
   const alertStyle = {
     position: 'fixed',
@@ -249,7 +239,7 @@ const MevlogViewer = ({ replaceMode = false, showBlockNumbers = true, chainData:
 
   return (
     <div className="mevlog-viewer">
-      {/* Error popup */}
+      {/* Error popup - always render if error exists */}
       {error && (
         <div style={alertStyle}>
           <span>{error}</span>
@@ -263,19 +253,27 @@ const MevlogViewer = ({ replaceMode = false, showBlockNumbers = true, chainData:
         </div>
       )}
 
-      <TransactionTableHeader
-        sortConfig={sortConfig}
-        onSort={handleSort}
-        showBlockNumbers={showBlockNumbers}
-      />
-      {sortedTransactions.map((transaction) => (
-        <Transaction
-          key={`${transaction.block_number}-${transaction.tx_hash}`}
-          transaction={transaction}
-          explorerUrl={transaction.explorer_url || (chainData && chainData.explorer_url)}
-          showBlockNumbers={showBlockNumbers}
-        />
-      ))}
+      {loading ? (
+        <div className="loading"></div>
+      ) : transactions.length === 0 ? (
+        <div className="no-data">Query returned no results</div>
+      ) : (
+        <>
+          <TransactionTableHeader
+            sortConfig={sortConfig}
+            onSort={handleSort}
+            showBlockNumbers={showBlockNumbers}
+          />
+          {getSortedTransactions().map((transaction) => (
+            <Transaction
+              key={`${transaction.block_number}-${transaction.tx_hash}`}
+              transaction={transaction}
+              explorerUrl={transaction.explorer_url || (chainData && chainData.explorer_url)}
+              showBlockNumbers={showBlockNumbers}
+            />
+          ))}
+        </>
+      )}
     </div>
   );
 };
