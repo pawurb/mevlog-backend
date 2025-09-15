@@ -53,7 +53,7 @@ async fn handle_socket(socket: WebSocket, params: SearchParams, headers: HeaderM
         .arg("--latest-offset") // Improves caching
         .arg("1")
         .arg("--max-range")
-        .arg("100");
+        .arg("500");
 
     match get_random_rpc_url(chain_id).await {
         Ok(Some(rpc_url)) => {
