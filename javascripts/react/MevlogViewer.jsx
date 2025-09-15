@@ -230,7 +230,7 @@ const MevlogViewer = ({ replaceMode = false, showBlockNumbers = true, chainData:
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    zIndex: 1000,
+    zIndex: 1001,
     maxWidth: '400px',
     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
     transition: 'opacity 0.3s ease'
