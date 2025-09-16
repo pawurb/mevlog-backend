@@ -147,6 +147,7 @@ const TransactionDetails = ({ transaction, explorerUrl, showExtraDetails = true 
     margin: '16px 0',
     height: '1px'
   };
+  console.log(transaction);
 
   return (
     <div className="tx-details" style={detailsStyle}>
@@ -159,7 +160,10 @@ const TransactionDetails = ({ transaction, explorerUrl, showExtraDetails = true 
       </div>
       <div style={{ marginBottom: '6px' }}>
         <span style={labelStyle}>Gas Tx Cost:</span>
-        <span style={valueStyle}>{transaction.display_tx_cost}</span>
+        <span style={valueStyle}>
+          {transaction.display_tx_cost}
+          {transaction.display_tx_cost_usd && ` | ${transaction.display_tx_cost_usd}`}
+        </span>
       </div>
       <div style={{ marginBottom: '6px' }}>
         <span style={labelStyle}>Gas Price:</span>
