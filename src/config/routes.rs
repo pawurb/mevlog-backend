@@ -18,8 +18,6 @@ pub async fn app() -> Router {
     let auth_state = AuthState::new().await.expect("Failed to create auth state");
     let database = auth_state.database.clone();
 
-    
-
     Router::new()
         .route("/", get(html::home_controller::home))
         .route("/login", get(html::login_controller::login))
@@ -56,7 +54,31 @@ pub async fn app() -> Router {
                 "assets/{deployed_at}-react-bundle.js"
             ))),
         )
-        .fallback_service(cache_control().layer(ServeDir::new("assets")))
+        .nest_service("/assets", cache_control().layer(ServeDir::new("assets")))
+        .route_service(
+            "/all-chains.png",
+            cache_control().layer(ServeFile::new("assets/all-chains.png")),
+        )
+        .route_service(
+            "/custom-queries.png",
+            cache_control().layer(ServeFile::new("assets/custom-queries.png")),
+        )
+        .route_service(
+            "/favicon.ico",
+            cache_control().layer(ServeFile::new("assets/favicon.ico")),
+        )
+        .route_service(
+            "/find-outliers.png",
+            cache_control().layer(ServeFile::new("assets/find-outliers.png")),
+        )
+        .route_service(
+            "/mevlog-logo.png",
+            cache_control().layer(ServeFile::new("assets/mevlog-logo.png")),
+        )
+        .route_service(
+            "/open-source.png",
+            cache_control().layer(ServeFile::new("assets/open-source.png")),
+        )
         .fallback(html::not_found_controller::not_found)
 }
 
