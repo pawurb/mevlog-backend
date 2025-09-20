@@ -5,7 +5,6 @@ import ExploreViewer from './ExploreViewer';
 import ChainSelector from './ChainSelector';
 import SearchForm from './SearchForm';
 import CommandBuilder from './CommandBuilder';
-import LoginPopup from './LoginPopup';
 
 // Export for global usage
 window.MevlogReact = {
@@ -14,7 +13,6 @@ window.MevlogReact = {
   ChainSelector,
   SearchForm,
   CommandBuilder,
-  LoginPopup,
   React,
   ReactDOM
 };

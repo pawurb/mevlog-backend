@@ -1,26 +1,21 @@
-use crate::{auth::AuthState, controllers::*, misc::utils::deployed_at};
+use crate::{controllers::*, misc::utils::deployed_at};
 use axum::{
-    Extension, Router,
+    Router,
     body::Body,
     http::{HeaderMap, HeaderValue, Response, StatusCode},
-    middleware,
     response::IntoResponse,
     routing::get,
 };
 use tower::Layer;
 use tower_http::services::{ServeDir, ServeFile};
 
-use super::{cache_control, middleware::update_user_activity};
+use super::cache_control;
 
 pub async fn app() -> Router {
     let deployed_at = deployed_at();
 
-    let auth_state = AuthState::new().await.expect("Failed to create auth state");
-    let database = auth_state.database.clone();
-
     Router::new()
         .route("/", get(html::home_controller::home))
-        .route("/login", get(html::login_controller::login))
         .route("/search", get(html::search_controller::search))
         .route("/terms", get(html::terms_controller::terms))
         .route("/explore", get(html::explore_controller::explore))
@@ -32,10 +27,6 @@ pub async fn app() -> Router {
         .route("/api/explore", get(json::explore_controller::explore))
         .route("/ws/search", get(websocket::search_controller::ws_handler))
         .route("/uptime", get(|| async move { "OK".into_response() }))
-        .merge(crate::auth::auth_routes())
-        .layer(Extension(database))
-        .layer(middleware::from_fn(update_user_activity))
-        .with_state(auth_state)
         .route_service(
             &format!("/{deployed_at}-scripts.js"),
             cache_control().layer(ServeFile::new(format!("assets/{deployed_at}-scripts.js"))),

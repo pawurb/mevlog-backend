@@ -36,20 +36,6 @@
       </a>
     </div>
     <div class="nav-right">
-      {% match user %}
-        {% when Some with (github_user) %}
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <img src="{{ github_user.avatar_url }}" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%;">
-            <span style="color: #ccc;">{{ github_user.login }}</span>
-            <a href="/auth/github/logout">
-              <button class="btn btn-default btn-ghost">Logout</button>
-            </a>
-          </div>
-        {% when None %}
-          <a href="/auth/github/login">
-            <button class="btn btn-default btn-ghost">Login with GitHub</button>
-          </a>
-      {% endmatch %}
     </div>
   </div>
 

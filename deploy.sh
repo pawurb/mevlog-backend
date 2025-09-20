@@ -8,7 +8,6 @@ rsync -azr --delete bin/ $TARGET_NODE:/root/mevlog-backend/bin
 rsync -azr --delete templates/ $TARGET_NODE:/root/mevlog-backend/templates
 rsync -azr --delete assets/ $TARGET_NODE:/root/mevlog-backend/assets
 rsync -azr --delete javascripts/ $TARGET_NODE:/root/mevlog-backend/javascripts
-rsync -azr --delete migrations/ $TARGET_NODE:/root/mevlog-backend/migrations
 rsync -azr --delete styles/ $TARGET_NODE:/root/mevlog-backend/styles
 rsync -azr --delete media/ $TARGET_NODE:/root/mevlog-backend/media
 rsync -av Cargo.* $TARGET_NODE:/root/mevlog-backend/

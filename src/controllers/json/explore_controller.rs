@@ -1,16 +1,15 @@
 use axum::{
     Json,
     extract::Query,
-    http::{HeaderMap, StatusCode},
+    http::StatusCode,
     response::IntoResponse,
 };
 use serde::Deserialize;
 use tokio::process::Command as AsyncCommand;
 
 use crate::{
-    auth::get_user_from_cookies,
     controllers::json::base_controller::{
-        call_json_command_first_line, error_json_response, extract_json_query_params,
+        call_json_command_first_line, extract_json_query_params,
     },
     misc::{
         prices::get_price_for_chain_id,
@@ -28,7 +27,6 @@ pub struct ExploreParams {
 
 pub async fn explore(
     query: Result<Query<ExploreParams>, axum::extract::rejection::QueryRejection>,
-    headers: HeaderMap,
 ) -> impl IntoResponse {
     let params = match extract_json_query_params(query) {
         Ok(params) => params,
@@ -39,16 +37,6 @@ pub async fn explore(
 
     let chain_id = params.chain_id.unwrap_or(1);
 
-    // Check if user is authenticated for non-mainnet chains
-    if chain_id != 1 {
-        let user = get_user_from_cookies(&headers);
-        if user.is_none() {
-            return error_json_response(
-                "Authentication required for non-mainnet chains. Please login with GitHub.",
-            )
-            .into_response();
-        }
-    }
 
     let mut cmd = AsyncCommand::new("mevlog");
     cmd.arg("search")

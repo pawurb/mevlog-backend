@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ChainSelector from './ChainSelector';
 import CommandBuilder from './CommandBuilder';
-import LoginPopup from './LoginPopup';
 
 const SearchForm = ({ initialValues = {}, onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -18,15 +17,7 @@ const SearchForm = ({ initialValues = {}, onSubmit }) => {
     chain_id: initialValues.chain_id || ''
   });
 
-  const [showLoginPopup, setShowLoginPopup] = useState(false);
 
-  // Helper function to check if user is authenticated
-  const isUserAuthenticated = () => {
-    // Check if there's a user avatar or logout button in the navigation
-    const userAvatar = document.querySelector('img[alt="Avatar"]');
-    const logoutButton = document.querySelector('a[href="/auth/github/logout"]');
-    return userAvatar && logoutButton;
-  };
 
   // Initialize results area and hide loading spinner
   useEffect(() => {
@@ -48,12 +39,6 @@ const SearchForm = ({ initialValues = {}, onSubmit }) => {
     // Check if URL contains search params and automatically start WebSocket connection
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.toString() != "") {
-      // Check if this is a non-mainnet chain and user is not authenticated
-      const chainIdFromUrl = urlParams.get('chain_id');
-      if (chainIdFromUrl && parseInt(chainIdFromUrl) !== 1 && !isUserAuthenticated()) {
-        setShowLoginPopup(true);
-        return;
-      }
 
       // Clear the placeholder and show loading state
       if (cmdOutput) {
@@ -831,17 +816,6 @@ const SearchForm = ({ initialValues = {}, onSubmit }) => {
         </div>
       )}
 
-      {showLoginPopup && (
-        <LoginPopup
-          onClose={() => {
-            setShowLoginPopup(false);
-            window.location.href = '/search';
-          }}
-          onLogin={() => {
-            window.location.href = '/auth/github/login';
-          }}
-        />
-      )}
     </div>
   );
 };

@@ -7,8 +7,7 @@ edition = "2024"
 url = "2.5.0"
 alloy = { version = "1.0", features = ["full", "node-bindings"] }
 revm = { version = "27.0.2", features = ["std", "alloydb"] }
-chrono = { version = "0.4.39", features = ["serde"] }
-uuid = { version = "1.11.0", features = ["v4", "js", "serde"] }
+uuid = { version = "1.11.0", features = ["v4"] }
 eyre = "0.6.12"
 serde_json = "1.0.138"
 openssl = { version = "0.10", features = ["vendored"] }
@@ -44,14 +43,6 @@ tokio-stream = "0.1.17"
 # mevlog = "0.6.0"
 mevlog = { path = "../mevlog-rs" }
 rand = "0.9.2"
-oauth2 = "4.4"
-cookie = "0.17"
-base64 = "0.22.0"
-urlencoding = "2.1"
-aes-gcm = "0.10"
-hex = "0.4"
-lazy_static = "1.4"
-sqlx = { version = "0.8", features = ["runtime-tokio-rustls", "sqlite", "chrono", "uuid", "migrate"] }
 
 [dev-dependencies]
 glob = "0.3.1"
@@ -68,4 +59,4 @@ name = "scheduler"
 path = "bin/scheduler.rs"
 
 [package.metadata.askama]
-template-dir = "views"
+template-dir = "templates"
