@@ -70,6 +70,10 @@ pub async fn app() -> Router {
             "/open-source.png",
             cache_control().layer(ServeFile::new("assets/open-source.png")),
         )
+        .route_service(
+            "/mevlog-demo.mp4",
+            cache_control().layer(ServeFile::new("assets/mevlog-demo.mp4")),
+        )
         .fallback(html::not_found_controller::not_found)
 }
 
