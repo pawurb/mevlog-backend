@@ -12,6 +12,7 @@ use tokio_stream::wrappers::LinesStream;
 
 use crate::controllers::base_controller::{DATA_FETCH_ERROR, decorate_error_message};
 
+#[cfg_attr(feature = "hotpath", hotpath::measure)]
 pub fn cmd_output_stream(
     cmd: &mut Command,
 ) -> (
@@ -36,6 +37,7 @@ pub fn cmd_output_stream(
     (stdout_lines, stderr_lines)
 }
 
+#[cfg_attr(feature = "hotpath", hotpath::measure)]
 pub async fn stream_output_lines(
     mut stdout_lines: LinesStream<BufReader<ChildStdout>>,
     mut stderr_lines: LinesStream<BufReader<ChildStderr>>,

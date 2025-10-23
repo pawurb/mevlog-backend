@@ -9,15 +9,25 @@ use tower_http::{
 use tracing::info;
 
 #[tokio::main]
+#[cfg_attr(feature = "hotpath", hotpath::main)]
 async fn main() -> Result<()> {
-    match run().await {
-        Ok(_) => Ok(()),
-        Err(e) => {
-            tracing::error!("{:?}", e);
-            Err(e)
+    let run_handle = tokio::spawn(async {
+        run().await
+    });
+
+     tokio::select! {
+        res = run_handle => {
+            res??; 
+        }
+
+        _ = tokio::signal::ctrl_c() => {
+            tracing::info!("Ctrl-C received, shutting down…");
         }
     }
+
+    Ok(())
 }
+
 
 async fn run() -> Result<()> {
     middleware::init_logs("server.log");

@@ -14,6 +14,7 @@ struct HomeTemplate {
     deployed_at: String,
 }
 
+#[cfg_attr(feature = "hotpath", hotpath::measure)]
 pub async fn terms() -> impl IntoResponse {
     let template = HomeTemplate {
         host: host(),

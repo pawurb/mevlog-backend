@@ -16,10 +16,7 @@ struct ExploreTemplate {
 }
 
 impl ExploreTemplate {
-    pub fn new(
-        chain_id: Option<u64>,
-        block_number: Option<String>,
-        ) -> Self {
+    pub fn new(chain_id: Option<u64>, block_number: Option<String>) -> Self {
         Self {
             host: host(),
             page: "explore".to_string(),
@@ -38,6 +35,7 @@ impl ExploreTemplate {
     }
 }
 
+#[cfg_attr(feature = "hotpath", hotpath::measure)]
 pub async fn explore(Query(params): Query<ExploreParams>) -> impl IntoResponse {
     let chain_id = if params.chain_id == Some(1) {
         None

@@ -1,16 +1,9 @@
-use axum::{
-    Json,
-    extract::Query,
-    http::StatusCode,
-    response::IntoResponse,
-};
+use axum::{Json, extract::Query, http::StatusCode, response::IntoResponse};
 use serde::Deserialize;
 use tokio::process::Command as AsyncCommand;
 
 use crate::{
-    controllers::json::base_controller::{
-        call_json_command_first_line, extract_json_query_params,
-    },
+    controllers::json::base_controller::{call_json_command_first_line, extract_json_query_params},
     misc::{
         prices::get_price_for_chain_id,
         rpc_utils::get_random_rpc_url,
@@ -25,6 +18,7 @@ pub struct ExploreParams {
     pub block_number: Option<String>,
 }
 
+#[cfg_attr(feature = "hotpath", hotpath::measure)]
 pub async fn explore(
     query: Result<Query<ExploreParams>, axum::extract::rejection::QueryRejection>,
 ) -> impl IntoResponse {
@@ -36,7 +30,6 @@ pub async fn explore(
     tracing::debug!("params: {:?}", params);
 
     let chain_id = params.chain_id.unwrap_or(1);
-
 
     let mut cmd = AsyncCommand::new("mevlog");
     cmd.arg("search")

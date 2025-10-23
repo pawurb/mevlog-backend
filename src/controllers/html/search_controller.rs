@@ -85,6 +85,7 @@ impl SearchParams {
     }
 }
 
+#[cfg_attr(feature = "hotpath", hotpath::measure)]
 pub async fn search(
     query: Result<Query<SearchParams>, axum::extract::rejection::QueryRejection>,
 ) -> impl IntoResponse {

@@ -43,6 +43,8 @@ tokio-stream = "0.1.17"
 # mevlog = "0.6.0"
 mevlog = { path = "../mevlog-rs" }
 rand = "0.9.2"
+hotpath = { version = "0.5", optional = true }
+
 
 [dev-dependencies]
 glob = "0.3.1"
@@ -60,3 +62,10 @@ path = "bin/scheduler.rs"
 
 [package.metadata.askama]
 template-dir = "templates"
+
+[features]
+hotpath = ["dep:hotpath", "hotpath/hotpath"]
+hotpath-alloc-bytes-total = ["hotpath/hotpath-alloc-bytes-total"]
+hotpath-alloc-count-total = ["hotpath/hotpath-alloc-count-total"]
+hotpath-alloc-self = ["hotpath/hotpath-alloc-self"]
+hotpath-off = ["hotpath/hotpath-off"]
