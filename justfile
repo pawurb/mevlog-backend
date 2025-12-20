@@ -13,5 +13,5 @@ deploy:
     ./deploy.sh 
 
 # Deploy and restart
-deploy_restart:
+release:
     ./deploy.sh && ./remote/restart.sh
