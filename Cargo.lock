@@ -3134,13 +3134,23 @@ dependencies = [
  "crossbeam-channel",
  "eyre",
  "hdrhistogram",
- "hotpath-macros",
+ "hotpath-macros 0.5.2",
  "prettytable-rs",
  "quanta",
  "serde",
  "serde_json",
  "tokio",
  "ureq",
+]
+
+[[package]]
+name = "hotpath"
+version = "0.9.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "daa7e73e5b9dd467b2cbe7cc50ba224cd43bfcc0a618fd75f4adc32cf3a95d66"
+dependencies = [
+ "hotpath-macros 0.9.1",
+ "tokio",
 ]
 
 [[package]]
@@ -3153,6 +3163,12 @@ dependencies = [
  "quote",
  "syn 2.0.106",
 ]
+
+[[package]]
+name = "hotpath-macros"
+version = "0.9.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4aca1659ca1e70edc8f96de48530a104bec11a267f663625098137bfd072d601"
 
 [[package]]
 name = "html-escape"
@@ -3952,6 +3968,7 @@ dependencies = [
  "glob",
  "hex",
  "home",
+ "hotpath 0.9.1",
  "html-escape",
  "indicatif",
  "parquet",
@@ -3983,7 +4000,7 @@ dependencies = [
  "futures",
  "futures-util",
  "glob",
- "hotpath",
+ "hotpath 0.5.2",
  "http-body-util",
  "mevlog",
  "mockito",
