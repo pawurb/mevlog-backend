@@ -50,6 +50,7 @@ async fn run() -> Result<()> {
 
     let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{port}")).await?;
 
+    println!("Server started at http://localhost:{}", port);
     info!("Listening on {}", listener.local_addr().unwrap());
     axum::serve(listener, app).await.unwrap();
 
