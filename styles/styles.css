@@ -422,6 +422,17 @@ pre.output {
   color: var(--background) !important;
 }
 
+.sticky-nav a[href="/tui"] button {
+  border-color: var(--bright-red) !important;
+  color: var(--bright-red) !important;
+  font-weight: bold;
+}
+
+.sticky-nav a[href="/tui"] button:hover {
+  background-color: var(--bright-red) !important;
+  color: var(--background) !important;
+}
+
 /* Also apply bright cyan to explore button outside sticky nav */
 a[href="/explore"] button {
   border-color: var(--bright-cyan) !important;
@@ -466,6 +477,23 @@ a[href="/explore"] button.active {
   background-color: var(--bright-cyan) !important;
   color: var(--background) !important;
   border-color: var(--bright-cyan) !important;
+}
+
+/* TUI button styling */
+a[href="/tui"] button {
+  border-color: var(--bright-red) !important;
+  color: var(--bright-red) !important;
+}
+
+a[href="/tui"] button:hover {
+  background-color: var(--bright-red) !important;
+  color: var(--background) !important;
+}
+
+a[href="/tui"] button.active {
+  background-color: var(--bright-red) !important;
+  color: var(--background) !important;
+  border-color: var(--bright-red) !important;
 }
 
 .video-wrapper {

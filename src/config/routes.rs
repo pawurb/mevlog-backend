@@ -19,6 +19,7 @@ pub async fn app() -> Router {
         .route("/search", get(html::search_controller::search))
         .route("/terms", get(html::terms_controller::terms))
         .route("/explore", get(html::explore_controller::explore))
+        .route("/tui", get(html::tui_controller::tui))
         .route(
             "/api/chain-info",
             get(json::chain_info_controller::chain_info),
