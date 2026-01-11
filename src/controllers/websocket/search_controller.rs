@@ -38,6 +38,8 @@ async fn handle_socket(socket: WebSocket, params: SearchParams, _headers: Header
         .arg("json-stream")
         .arg("--latest-offset") // Improves caching
         .arg("1")
+        .arg("--batch-size")
+        .arg("20")
         .arg("--max-range")
         .arg("500");
 
