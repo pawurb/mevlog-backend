@@ -789,6 +789,47 @@ a[href="/tui"] button.active {
   padding: 0 20px;
 }
 
+.install-command {
+  display: inline-block;
+  padding: 8px 16px;
+  border: 1px solid var(--yellow);
+  color: var(--yellow);
+  background-color: transparent;
+}
+
+.install-command::before,
+.install-command::after {
+  content: none;
+}
+
+.section-header {
+  text-align: left;
+  padding-left: 20px;
+  margin-top: 30px;
+  font-size: 1.8rem;
+}
+
+.tui-page .section-header {
+  color: var(--bright-magenta);
+  position: relative;
+  padding-left: 0;
+  margin-top: 40px;
+  margin-bottom: 16px;
+}
+
+.tui-page .section-header::before {
+  content: ">";
+  color: var(--bright-green);
+  margin-right: 12px;
+  font-weight: bold;
+}
+
+.features-list {
+  list-style-type: disc;
+  padding-left: 40px;
+  text-align: left;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .sticky-nav {
@@ -833,5 +874,126 @@ a[href="/tui"] button.active {
 
   .feature-image {
     width: 300px;
+  }
+}
+
+/* TUI Page Styles */
+.tui-page .fade-in {
+  animation: fadeInUp 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+.tui-page .fade-in:nth-child(1) { animation-delay: 0s; }
+.tui-page .fade-in:nth-child(2) { animation-delay: 0.05s; }
+.tui-page .fade-in:nth-child(3) { animation-delay: 0.1s; }
+.tui-page .fade-in:nth-child(4) { animation-delay: 0.15s; }
+.tui-page .fade-in:nth-child(5) { animation-delay: 0.2s; }
+.tui-page .fade-in:nth-child(6) { animation-delay: 0.25s; }
+.tui-page .fade-in:nth-child(7) { animation-delay: 0.3s; }
+.tui-page .fade-in:nth-child(8) { animation-delay: 0.35s; }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Install command box */
+.install-box {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px 20px;
+  border: 1px solid var(--bright-black);
+  border-radius: 6px;
+  background: linear-gradient(135deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 100%);
+  transition: all 0.3s ease;
+}
+
+.install-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.install-box:hover {
+  border-color: var(--yellow);
+  box-shadow: 0 0 20px rgba(245, 174, 46, 0.15);
+}
+
+.install-box .prompt {
+  color: var(--bright-green);
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.install-box .install-command {
+  border: none;
+  padding: 0;
+  background: transparent;
+}
+
+/* TUI demo video */
+.demo-video {
+  margin: 30px auto;
+  max-width: 800px;
+}
+
+.demo-video video {
+  width: 100%;
+  border: 2px solid var(--bright-black);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+.demo-video video:hover {
+  border-color: var(--bright-red);
+}
+
+/* TUI features list */
+.tui-features {
+  list-style: none !important;
+  padding-left: 20px !important;
+}
+
+.tui-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(103, 95, 84, 0.3);
+}
+
+.tui-features li:last-child {
+  border-bottom: none;
+}
+
+.feature-icon {
+  flex-shrink: 0;
+  width: 28px;
+  min-width: 28px;
+  text-align: center;
+  display: inline-block;
+}
+
+.tui-features .feature-text {
+  flex: 1;
+}
+
+.tui-features strong {
+  color: var(--bright-cyan);
+  margin-right: 4px;
+}
+
+@media (max-width: 768px) {
+  .tui-features li {
+    font-size: 0.95em;
   }
 }
