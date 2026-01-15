@@ -652,6 +652,9 @@ a[href="/tui"] button.active {
   max-width: 1200px;
   margin: 0 auto;
   text-align: center;
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
 .main-logo {
@@ -824,11 +827,6 @@ a[href="/tui"] button.active {
   font-weight: bold;
 }
 
-.features-list {
-  list-style-type: disc;
-  padding-left: 40px;
-  text-align: left;
-}
 
 /* Responsive design */
 @media (max-width: 768px) {
@@ -866,10 +864,19 @@ a[href="/tui"] button.active {
     text-align: center;
   }
 
+  .feature-row .feature-text h3,
+  .feature-row.reverse .feature-text h3,
+  .feature-row .feature-text p,
+  .feature-row.reverse .feature-text p {
+    text-align: center;
+  }
+
   .feature-row .feature-image-container,
   .feature-row.reverse .feature-image-container {
     grid-column: 1;
     grid-row: 2;
+    display: flex;
+    justify-content: center;
   }
 
   .feature-image {
