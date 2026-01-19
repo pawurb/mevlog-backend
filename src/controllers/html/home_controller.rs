@@ -8,7 +8,7 @@ use crate::{
 };
 
 // force html views recompilation by changing this value
-const _VIEW_VERSION: u64 = 15;
+const _VIEW_VERSION: u64 = 16;
 
 #[derive(Template)]
 #[template(path = "home.html")]
