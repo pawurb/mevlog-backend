@@ -3,7 +3,7 @@ set -euo pipefail
 
 bash timestamp_assets.sh
 
-cross build --release --target x86_64-unknown-linux-musl
+cross build --release --target x86_64-unknown-linux-musl --features='hotpath,hotpath-alloc'
 
 rsync -avz target/x86_64-unknown-linux-musl/release/server $TARGET_NODE:/root/mevlog-backend/server
 rsync -avz target/x86_64-unknown-linux-musl/release/scheduler $TARGET_NODE:/root/mevlog-backend/scheduler

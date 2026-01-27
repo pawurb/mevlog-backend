@@ -1,5 +1,6 @@
 use axum::middleware::from_fn;
 use eyre::Result;
+use axum::http::StatusCode;
 use mevlog_backend::config::{cors, middleware, routes::app};
 use std::time::Duration;
 use tokio::net::TcpListener;
@@ -9,7 +10,7 @@ use tower_http::{
 use tracing::info;
 
 #[tokio::main]
-#[cfg_attr(feature = "hotpath", hotpath::main)]
+#[hotpath::main]
 async fn main() -> Result<()> {
     let run_handle = tokio::spawn(async {
         run().await
@@ -36,7 +37,7 @@ async fn run() -> Result<()> {
         .await
         .layer(from_fn(middleware::request_tracing))
         .layer(from_fn(middleware::only_ssl))
-        .layer(TimeoutLayer::new(Duration::from_secs(10)))
+        .layer(TimeoutLayer::with_status_code(StatusCode::REQUEST_TIMEOUT, Duration::from_secs(10)))
         .layer(CompressionLayer::new())
         .layer(CatchPanicLayer::new())
         .layer(from_fn(middleware::security_headers))

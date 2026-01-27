@@ -16,7 +16,7 @@ use axum::{
 use futures::stream::StreamExt;
 use tokio::process::Command;
 
-#[cfg_attr(feature = "hotpath", hotpath::measure)]
+#[hotpath::measure]
 pub async fn ws_handler(
     ws: WebSocketUpgrade,
     Query(params): Query<SearchParams>,
@@ -25,7 +25,7 @@ pub async fn ws_handler(
     ws.on_upgrade(|socket| handle_socket(socket, params, headers))
 }
 
-#[cfg_attr(feature = "hotpath", hotpath::measure)]
+#[hotpath::measure]
 async fn handle_socket(socket: WebSocket, params: SearchParams, _headers: HeaderMap) {
     let (sender, _receiver) = socket.split();
 

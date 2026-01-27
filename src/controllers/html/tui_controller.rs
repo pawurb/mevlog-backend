@@ -14,7 +14,7 @@ struct TuiTemplate {
     deployed_at: String,
 }
 
-#[cfg_attr(feature = "hotpath", hotpath::measure)]
+#[hotpath::measure]
 pub async fn tui() -> impl IntoResponse {
     let template = TuiTemplate {
         host: host(),

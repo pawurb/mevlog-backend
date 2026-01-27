@@ -18,7 +18,7 @@ struct HomeTemplate {
     deployed_at: String,
 }
 
-#[cfg_attr(feature = "hotpath", hotpath::measure)]
+#[hotpath::measure]
 pub async fn home() -> impl IntoResponse {
     tracing::debug!("Home controller called");
 

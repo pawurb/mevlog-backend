@@ -18,7 +18,7 @@ pub struct ExploreParams {
     pub block_number: Option<String>,
 }
 
-#[cfg_attr(feature = "hotpath", hotpath::measure)]
+#[hotpath::measure]
 pub async fn explore(
     query: Result<Query<ExploreParams>, axum::extract::rejection::QueryRejection>,
 ) -> impl IntoResponse {

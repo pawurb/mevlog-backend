@@ -35,7 +35,7 @@ impl ExploreTemplate {
     }
 }
 
-#[cfg_attr(feature = "hotpath", hotpath::measure)]
+#[hotpath::measure]
 pub async fn explore(Query(params): Query<ExploreParams>) -> impl IntoResponse {
     let chain_id = if params.chain_id == Some(1) {
         None
