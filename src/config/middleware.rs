@@ -52,6 +52,9 @@ pub async fn request_tracing(request: Request, next: Next) -> Response {
         return next.run(request).await;
     }
 
+    hotpath::gauge!("requests_count").inc(1);
+    hotpath::dbg!(&path);
+
     let uuid = Uuid::new_v4();
     let uuid_str = uuid.to_string().replace("-", "");
     let request_id = &uuid_str[0..12];
@@ -96,7 +99,6 @@ pub async fn security_headers(request: Request, next: Next) -> Response {
 
     response
 }
-
 
 pub fn cors() -> CorsLayer {
     CorsLayer::new()
