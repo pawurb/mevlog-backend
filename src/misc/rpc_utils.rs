@@ -20,19 +20,22 @@ static RPC_URL_MEMORY_CACHE: std::sync::LazyLock<RpcCache> =
     std::sync::LazyLock::new(|| Arc::new(RwLock::new(HashMap::new())));
 const CACHE_DURATION: Duration = Duration::from_secs(60); // 1 minute
 
+#[hotpath::measure(log = true)]
 pub async fn get_random_rpc_url(chain_id: u64) -> Result<Option<String>> {
     let urls = get_cached_rpc_urls(chain_id).await?;
     let mut rng = rand::rng();
     Ok(urls.choose(&mut rng).cloned())
 }
 
+#[hotpath::measure(log = true)]
 async fn get_cached_rpc_urls(chain_id: u64) -> Result<Vec<String>> {
     {
         let cache_read = RPC_URL_MEMORY_CACHE.read().await;
         if let Some(cached) = cache_read.get(&chain_id)
-            && cached.cached_at.elapsed() < CACHE_DURATION {
-                return Ok(cached.urls.clone());
-            }
+            && cached.cached_at.elapsed() < CACHE_DURATION
+        {
+            return Ok(cached.urls.clone());
+        }
     }
 
     let chain_info = fetch_chain_info(chain_id).await?;
@@ -57,6 +60,7 @@ async fn get_cached_rpc_urls(chain_id: u64) -> Result<Vec<String>> {
     Ok(top_rpc_urls)
 }
 
+#[hotpath::measure(log = true)]
 async fn fetch_chain_info(chain_id: u64) -> Result<ChainInfoJson> {
     let mut cmd = AsyncCommand::new("mevlog");
     cmd.arg("chain-info")

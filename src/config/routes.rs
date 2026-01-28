@@ -86,6 +86,7 @@ pub fn invalid_req(reason: &str) -> Response<Body> {
     (StatusCode::BAD_REQUEST, reason.to_string()).into_response()
 }
 
+#[hotpath::measure]
 pub fn html_response(body: String, status: StatusCode) -> Response<Body> {
     let mut headers = HeaderMap::new();
     headers.insert(

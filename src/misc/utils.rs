@@ -21,6 +21,7 @@ pub fn format_duration(duration: Duration) -> String {
     format!("{secs}.{millis:02}s")
 }
 
+#[hotpath::measure]
 pub async fn uptime_ping(uptime_url: &str) -> Result<()> {
     let client = reqwest::Client::new();
     match client.get(uptime_url).send().await {

@@ -12,7 +12,7 @@ pub struct ChainInfoParams {
     pub chain_id: u64,
 }
 
-#[hotpath::measure]
+#[hotpath::measure(log = true)]
 pub async fn fetch_chain_info_no_rpcs(chain_id: u64) -> Result<ChainInfoNoRpcsJson, String> {
     let mut cmd = AsyncCommand::new("mevlog");
     cmd.arg("chain-info")
@@ -31,7 +31,7 @@ pub async fn fetch_chain_info_no_rpcs(chain_id: u64) -> Result<ChainInfoNoRpcsJs
     }
 }
 
-#[hotpath::measure]
+#[hotpath::measure(log = true)]
 pub async fn chain_info(
     query: Result<Query<ChainInfoParams>, axum::extract::rejection::QueryRejection>,
 ) -> impl IntoResponse {

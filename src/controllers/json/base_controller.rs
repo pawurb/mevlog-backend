@@ -9,6 +9,7 @@ use tokio::time::timeout;
 
 use crate::controllers::base_controller::{DATA_FETCH_ERROR, decorate_error_message};
 
+#[hotpath::measure]
 pub async fn call_json_command<T: serde::de::DeserializeOwned>(
     cmd: &mut Command,
 ) -> Result<T, Value> {

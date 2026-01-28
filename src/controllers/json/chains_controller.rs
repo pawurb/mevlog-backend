@@ -14,7 +14,7 @@ pub struct ChainsParams {
     pub chain_id: Option<u64>,
 }
 
-#[hotpath::measure]
+#[hotpath::measure(log = true)]
 pub async fn chains(
     query: Result<Query<ChainsParams>, axum::extract::rejection::QueryRejection>,
 ) -> impl IntoResponse {
