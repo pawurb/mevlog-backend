@@ -9,7 +9,7 @@ use tower_http::{
 };
 use tracing::info;
 
-#[tokio::main]
+#[tokio::main(flavor = "current_thread")]
 #[hotpath::main]
 async fn main() -> Result<()> {
     let run_handle = tokio::spawn(async {

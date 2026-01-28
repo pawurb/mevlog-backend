@@ -3103,6 +3103,15 @@ version = "0.9.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3554f9fc054c95f68e9f31196ca3aa77c6ce299f2e5877788e68168d01b7cfab"
 dependencies = [
+ "hotpath-macros 0.9.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "tokio",
+]
+
+[[package]]
+name = "hotpath"
+version = "0.9.3"
+source = "git+https://github.com/pawurb/hotpath-rs?branch=main#6dd01abce54e17a2a0f9aa24ac731a45c9fd4eaf"
+dependencies = [
  "arc-swap",
  "base64 0.22.1",
  "cfg-if",
@@ -3112,7 +3121,7 @@ dependencies = [
  "eyre",
  "futures-util",
  "hdrhistogram",
- "hotpath-macros",
+ "hotpath-macros 0.9.3 (git+https://github.com/pawurb/hotpath-rs?branch=main)",
  "libc",
  "mach2",
  "pin-project-lite",
@@ -3130,6 +3139,11 @@ name = "hotpath-macros"
 version = "0.9.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9e8cf5fa828dd9b99de52bb85f9027c0d5205971cb3c45842b4bf6d7c7f6c679"
+
+[[package]]
+name = "hotpath-macros"
+version = "0.9.3"
+source = "git+https://github.com/pawurb/hotpath-rs?branch=main#6dd01abce54e17a2a0f9aa24ac731a45c9fd4eaf"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -3910,7 +3924,7 @@ dependencies = [
  "glob",
  "hex",
  "home",
- "hotpath",
+ "hotpath 0.9.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "html-escape",
  "indicatif",
  "parquet",
@@ -3944,7 +3958,7 @@ dependencies = [
  "futures",
  "futures-util",
  "glob",
- "hotpath",
+ "hotpath 0.9.3 (git+https://github.com/pawurb/hotpath-rs?branch=main)",
  "http-body-util",
  "mevlog",
  "mockito",
