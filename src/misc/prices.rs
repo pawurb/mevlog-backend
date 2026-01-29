@@ -5,28 +5,26 @@ use reqwest;
 use serde::{Deserialize, Serialize};
 use tokio::sync::RwLock;
 
-const COINGECKO_API_URL: &str = "https://api.coingecko.com/api/v3/simple/price?ids=ethereum,binancecoin,matic-network&vs_currencies=usd";
+const COINGECKO_API_URL: &str = "https://api.coingecko.com/api/v3/simple/price?ids=ethereum,binancecoin&vs_currencies=usd";
 
 static PRICE_CACHE: LazyLock<RwLock<Option<PriceResponse>>> = LazyLock::new(|| RwLock::new(None));
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TokenPrice {
-    pub usd: f64,
+    #[serde(default)]
+    pub usd: Option<f64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PriceResponse {
     pub ethereum: TokenPrice,
     pub binancecoin: TokenPrice,
-    #[serde(rename = "matic-network")]
-    pub matic_network: TokenPrice,
 }
 
 pub async fn get_price_for_chain_id(chain_id: u64) -> Result<Option<f64>> {
     match chain_id {
-        1 => Ok(Some(get_crypto_prices().await?.ethereum.usd)),
-        56 => Ok(Some(get_crypto_prices().await?.binancecoin.usd)),
-        137 => Ok(Some(get_crypto_prices().await?.matic_network.usd)),
+        1 => Ok(get_crypto_prices().await?.ethereum.usd),
+        56 => Ok(get_crypto_prices().await?.binancecoin.usd),
         _ => Ok(None),
     }
 }
