@@ -33,8 +33,7 @@ async fn main() -> Result<()> {
 async fn run() -> Result<()> {
     middleware::init_logs("server.log");
 
-    let app = app()
-        .await
+    let app = hotpath::future!(app(), log = true).await
         .layer(from_fn(middleware::request_tracing))
         .layer(from_fn(middleware::only_ssl))
         .layer(TimeoutLayer::with_status_code(StatusCode::REQUEST_TIMEOUT, Duration::from_secs(10)))
