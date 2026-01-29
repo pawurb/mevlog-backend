@@ -67,7 +67,9 @@ pub async fn call_json_command_first_line<T: serde::de::DeserializeOwned>(
 
         let mut reader = BufReader::new(stdout).lines();
 
-        if let Some(line) = reader.next_line().await.map_err(|e| {
+        let next_line_future = hotpath::future!(reader.next_line(), log = true);
+
+        if let Some(line) = next_line_future.await.map_err(|e| {
             serde_json::json!({
                 "error": format!("Failed to read line: {e}")
             })
