@@ -70,6 +70,19 @@ async fn fetch_prices_from_api() -> Result<PriceResponse> {
         }
     };
 
-    let prices: PriceResponse = response.json().await?;
-    Ok(prices)
+    let status = response.status();
+    let body = response.text().await?;
+
+    if !status.is_success() {
+        tracing::error!("CoinGecko API error ({}): {}", status, &body);
+        bail!("CoinGecko API returned status {}: {}", status, &body);
+    }
+
+    match serde_json::from_str::<PriceResponse>(&body) {
+        Ok(prices) => Ok(prices),
+        Err(e) => {
+            tracing::error!("Failed to parse CoinGecko response: {} | Body: {}", &e, &body);
+            bail!("Failed to parse prices: {}", e)
+        }
+    }
 }
