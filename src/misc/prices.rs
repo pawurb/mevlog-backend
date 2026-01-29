@@ -61,7 +61,12 @@ pub async fn update_prices_cache() -> Result<()> {
 
 async fn fetch_prices_from_api() -> Result<PriceResponse> {
     let client = reqwest::Client::new();
-    let response = match client.get(COINGECKO_API_URL).send().await {
+    let response = match client
+        .get(COINGECKO_API_URL)
+        .header("User-Agent", "mevlog-backend/1.0")
+        .send()
+        .await
+    {
         Ok(response) => response,
         Err(e) => {
             let msg = format!("Failed to fetch prices from API: {}", &e);
