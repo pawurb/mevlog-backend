@@ -12,10 +12,6 @@ server:
 deploy:
     ./deploy.sh 
 
-# Deploy, restart, and warmup
-release: && warmup
+# Deploy and restart
+release:
     ./deploy.sh && ./remote/restart.sh
-
-# Warmup the server after deployment
-warmup:
-    ./warmup.sh
