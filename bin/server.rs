@@ -1,6 +1,6 @@
+use axum::http::StatusCode;
 use axum::middleware::from_fn;
 use eyre::Result;
-use axum::http::StatusCode;
 use mevlog_backend::config::{cors, middleware, routes::app};
 use std::time::Duration;
 use tokio::net::TcpListener;
@@ -12,13 +12,11 @@ use tracing::info;
 #[tokio::main(flavor = "current_thread")]
 #[hotpath::main]
 async fn main() -> Result<()> {
-    let run_handle = tokio::spawn(async {
-        run().await
-    });
+    let run_handle = tokio::spawn(async { run().await });
 
-     tokio::select! {
+    tokio::select! {
         res = run_handle => {
-            res??; 
+            res??;
         }
 
         _ = tokio::signal::ctrl_c() => {
@@ -29,14 +27,17 @@ async fn main() -> Result<()> {
     Ok(())
 }
 
-
 async fn run() -> Result<()> {
     middleware::init_logs("server.log");
 
-    let app = hotpath::future!(app(), log = true).await
+    let app = hotpath::future!(app(), log = true)
+        .await
         .layer(from_fn(middleware::request_tracing))
         .layer(from_fn(middleware::only_ssl))
-        .layer(TimeoutLayer::with_status_code(StatusCode::REQUEST_TIMEOUT, Duration::from_secs(10)))
+        .layer(TimeoutLayer::with_status_code(
+            StatusCode::REQUEST_TIMEOUT,
+            Duration::from_secs(10),
+        ))
         .layer(CompressionLayer::new())
         .layer(CatchPanicLayer::new())
         .layer(from_fn(middleware::security_headers))

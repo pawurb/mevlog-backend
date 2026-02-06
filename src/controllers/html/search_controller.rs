@@ -28,11 +28,16 @@ struct SearchTemplate {
     page: String,
     deployed_at: String,
     chain_id: String,
+    title: String,
+    description: String,
+    canonical_url: String,
 }
 
 impl SearchTemplate {
     pub fn new(params: SearchParams, output: String) -> Self {
         let blocks = get_default_blocks(params.blocks);
+        let h = host();
+        let canonical_url = format!("{h}/search");
 
         Self {
             output,
@@ -46,10 +51,13 @@ impl SearchTemplate {
             erc20_transfer: params.erc20_transfer.unwrap_or_default(),
             tx_cost: params.tx_cost.unwrap_or_default(),
             gas_price: params.gas_price.unwrap_or_default(),
-            host: host(),
+            host: h,
             page: "search".to_string(),
             deployed_at: deployed_at(),
             chain_id: params.chain_id.unwrap_or(1).to_string(),
+            title: "Search EVM Transactions - mevlog.rs".to_string(),
+            description: "Search and filter EVM transactions with advanced queries. Filter by events, method calls, ENS names, validator bribes, ERC20 transfers, gas price, and more.".to_string(),
+            canonical_url,
         }
     }
 }

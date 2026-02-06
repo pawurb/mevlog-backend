@@ -5,7 +5,8 @@ use reqwest;
 use serde::{Deserialize, Serialize};
 use tokio::sync::RwLock;
 
-const COINGECKO_API_URL: &str = "https://api.coingecko.com/api/v3/simple/price?ids=ethereum,binancecoin&vs_currencies=usd";
+const COINGECKO_API_URL: &str =
+    "https://api.coingecko.com/api/v3/simple/price?ids=ethereum,binancecoin&vs_currencies=usd";
 
 static PRICE_CACHE: LazyLock<RwLock<Option<PriceResponse>>> = LazyLock::new(|| RwLock::new(None));
 
@@ -86,7 +87,11 @@ async fn fetch_prices_from_api() -> Result<PriceResponse> {
     match serde_json::from_str::<PriceResponse>(&body) {
         Ok(prices) => Ok(prices),
         Err(e) => {
-            tracing::error!("Failed to parse CoinGecko response: {} | Body: {}", &e, &body);
+            tracing::error!(
+                "Failed to parse CoinGecko response: {} | Body: {}",
+                &e,
+                &body
+            );
             bail!("Failed to parse prices: {}", e)
         }
     }

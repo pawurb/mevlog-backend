@@ -12,11 +12,18 @@ struct NotFoundTemplate {
     host: String,
     page: String,
     deployed_at: String,
+    title: String,
+    description: String,
+    canonical_url: String,
 }
 
 pub async fn not_found() -> impl IntoResponse {
+    let h = host();
     let template = NotFoundTemplate {
-        host: host(),
+        title: "Page Not Found - mevlog.rs".to_string(),
+        description: "The page you are looking for does not exist.".to_string(),
+        canonical_url: format!("{h}/"),
+        host: h,
         page: "404".to_string(),
         deployed_at: deployed_at(),
     };

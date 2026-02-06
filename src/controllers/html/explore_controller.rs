@@ -13,12 +13,20 @@ struct ExploreTemplate {
     deployed_at: String,
     chain_id: Option<u64>,
     block_number: Option<String>,
+    title: String,
+    description: String,
+    canonical_url: String,
 }
 
 impl ExploreTemplate {
     pub fn new(chain_id: Option<u64>, block_number: Option<String>) -> Self {
+        let h = host();
+        let canonical_url = format!("{h}/explore");
         Self {
-            host: host(),
+            title: "Explore EVM Blocks - mevlog.rs".to_string(),
+            description: "Explore the latest blocks and transactions across 2000+ EVM-compatible chains. View transaction details with EVM tracing insights.".to_string(),
+            canonical_url,
+            host: h,
             page: "explore".to_string(),
             deployed_at: deployed_at(),
             chain_id,

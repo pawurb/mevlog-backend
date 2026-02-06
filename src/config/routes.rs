@@ -9,7 +9,7 @@ use axum::{
 use tower::Layer;
 use tower_http::services::{ServeDir, ServeFile};
 
-use super::cache_control;
+use super::{cache_control, host};
 
 pub async fn app() -> Router {
     let deployed_at = deployed_at();
@@ -28,6 +28,8 @@ pub async fn app() -> Router {
         .route("/api/explore", get(json::explore_controller::explore))
         .route("/ws/search", get(websocket::search_controller::ws_handler))
         .route("/uptime", get(|| async move { "OK".into_response() }))
+        .route("/robots.txt", get(robots_txt))
+        .route("/sitemap.xml", get(sitemap_xml))
         .route_service(
             &format!("/{deployed_at}-scripts.js"),
             cache_control().layer(ServeFile::new(format!("assets/{deployed_at}-scripts.js"))),
@@ -80,6 +82,53 @@ pub async fn app() -> Router {
             cache_control().layer(ServeFile::new("media/mevlog-tui-demo.mp4")),
         )
         .fallback(html::not_found_controller::not_found)
+}
+
+async fn robots_txt() -> Response<Body> {
+    let h = host();
+    let body = format!("User-agent: *\nAllow: /\n\nSitemap: {h}/sitemap.xml\n");
+    let mut headers = HeaderMap::new();
+    headers.insert(
+        "Content-Type",
+        HeaderValue::from_static("text/plain; charset=utf-8"),
+    );
+    (StatusCode::OK, headers, body).into_response()
+}
+
+async fn sitemap_xml() -> Response<Body> {
+    let h = host();
+    let body = format!(
+        r#"<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>{h}/</loc>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>{h}/explore</loc>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>{h}/search</loc>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>{h}/tui</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>{h}/terms</loc>
+    <priority>0.3</priority>
+  </url>
+</urlset>
+"#
+    );
+    let mut headers = HeaderMap::new();
+    headers.insert(
+        "Content-Type",
+        HeaderValue::from_static("application/xml; charset=utf-8"),
+    );
+    (StatusCode::OK, headers, body).into_response()
 }
 
 pub fn invalid_req(reason: &str) -> Response<Body> {

@@ -1,5 +1,22 @@
 {% extends "layout.html" %}
 
+{% block head_extra %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "mevlog.rs",
+  "url": "https://mevlog.rs/",
+  "description": "Open-source web interface for querying EVM transactions across 2000+ chains, powered by Revm.",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://mevlog.rs/search?event={search_term}",
+    "query-input": "required name=search_term"
+  }
+}
+</script>
+{% endblock %}
+
 {% block content %}
 
 <div class="hero-section">
@@ -8,7 +25,7 @@
   <div class="features-list">
     <div class="feature-row">
       <div class="feature-text">
-        <h3>Explore ALL chains in one place</h3>
+        <h2>Explore ALL chains in one place</h2>
         <p>Try a web version integrated with over 2k EVM chains via <a class='yellow' target='_blank' href="https://chainlist.org/">ChainList</a> RPCs. Or connect <a class='yellow' target='_blank' href="https://github.com/pawurb/mevlog-rs">mevlog-rs CLI</a> to your local node for the best performance.</p></p>
       </div>
       <div class="feature-image-container">
@@ -21,14 +38,14 @@
         <img src="/custom-queries.png" alt="Custom Queries" class="feature-image" />
       </div>
       <div class="feature-text">
-        <h3>Query txs with flexible filters</h3>
+        <h2>Query txs with flexible filters</h2>
         <p>Build complex queries with advanced filtering options. Search by events, method calls, ENS names, validator bribes, ERC20 transfers and more.</p>
       </div>
     </div>
     
     <div class="feature-row">
       <div class="feature-text">
-        <h3>Quickly find outliers</h3>
+        <h2>Quickly find outliers</h2>
         <p>Identify unusual transactions and potential MEV opportunities. Detect anomalies in gas usage, value transfers, and execution patterns.</p>
       </div>
       <div class="feature-image-container">
@@ -41,7 +58,7 @@
         <img src="/open-source.png" alt="Open Source" class="feature-image" />
       </div>
       <div class="feature-text">
-        <h3>Open-Source and free to use</h3>
+        <h2>Open-Source and free to use</h2>
         <p>Powered by MIT Licensed Rust crate <a class='yellow' target='_blank' href="https://github.com/pawurb/mevlog-rs">mevlog-rs</a>.</p>
       </div>
     </div>

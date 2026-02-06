@@ -4,15 +4,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>mevlog.rs - Explore all EVM chains in one place, powered by Revm</title>
-  <link rel="stylesheet" href="{{ host }}/{{ deployed_at }}-styles.css">
+  <title>{{ title }}</title>
+  <meta name="description" content="{{ description }}">
+  <link rel="canonical" href="{{ canonical_url }}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ title }}">
+  <meta property="og:description" content="{{ description }}">
+  <meta property="og:url" content="{{ canonical_url }}">
+  <meta property="og:site_name" content="mevlog.rs">
+  <meta property="og:image" content="{{ host }}/mevlog-logo.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{{ title }}">
+  <meta name="twitter:description" content="{{ description }}">
+  <meta name="twitter:image" content="{{ host }}/mevlog-logo.png">
+  {% block head_extra %}{% endblock %}
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="{{ host }}/{{ deployed_at }}-styles.css">
   <link rel="stylesheet" href="{{ host }}/{{ deployed_at }}-terminal.css">
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="{{ host }}/{{ deployed_at }}-react-bundle.js"></script>
   <script src="{{ host }}/{{ deployed_at }}-scripts.js"></script>
-  <meta name="description" content="mevlog.rs is a web interface for EVM transactions querying CLI powered by Revm. It provides a simple way to query transactions data with EVM tracing insights and flexible filtering options.">
 </head>
 
 <body class="terminal">

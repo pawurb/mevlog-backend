@@ -16,14 +16,21 @@ struct HomeTemplate {
     host: String,
     page: String,
     deployed_at: String,
+    title: String,
+    description: String,
+    canonical_url: String,
 }
 
 #[hotpath::measure]
 pub async fn home() -> impl IntoResponse {
     tracing::debug!("Home controller called");
 
+    let h = host();
     let template = HomeTemplate {
-        host: host(),
+        title: "mevlog.rs - Explore EVM chains in one place, powered by Revm".to_string(),
+        description: "Open-source web interface for querying EVM transactions across 2000+ chains. Search by events, method calls, ENS names, ERC20 transfers, and more.".to_string(),
+        canonical_url: format!("{h}/"),
+        host: h,
         page: "home".to_string(),
         deployed_at: deployed_at(),
     };
